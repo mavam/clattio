@@ -1,0 +1,50 @@
+{
+  "name": "clattio",
+  "version": "0.0.1",
+  "description": "Manage Attio from the terminal.",
+  "homepage": "https://github.com/mavam/clattio",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mavam/clattio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mavam/clattio/issues"
+  },
+  "keywords": [
+    "attio",
+    "cli",
+    "crm",
+    "oauth"
+  ],
+  "type": "module",
+  "bin": {
+    "attio": "./dist/attio.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "packageManager": "bun@1.3.9",
+  "engines": {
+    "bun": ">=1.3.9",
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "generate": "bun scripts/generate.ts",
+    "build": "bun run generate && bunx tsup src/bin/attio.ts --format esm --out-dir dist --clean --dts",
+    "prepack": "bun run build",
+    "test": "bun run generate && bunx vitest run"
+  },
+  "dependencies": {
+    "commander": "14.0.3"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "0.94.0",
+    "@types/node": "24.3.0",
+    "tsup": "8.5.0",
+    "typescript": "5.9.2",
+    "vitest": "3.2.4"
+  }
+}
