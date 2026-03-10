@@ -21,9 +21,11 @@ Map the user's request to the right resource type before you run commands:
 - **File**: uploaded or linked file/folder content on records.
 - **Webhook / SCIM / workspace member / meta**: integration and administration surfaces.
 
-If a user says “contact,” “company,” “deal,” or “CRM item,” they usually mean a **record**.
-If they say “pipeline,” “queue,” “segment,” or “saved collection,” they often mean a **list** plus **entries**.
-If they say “field,” “dropdown,” “status,” or “schema,” they mean **attributes** or **objects**.
+If a user says "contact," "company," "deal," or "CRM item," they usually mean a **record**.
+If they say "pipeline," "queue," "segment," or "saved collection," they often mean a **list** plus **entries**.
+If they say "field," "dropdown," "status," or "schema," they mean **attributes** or **objects**.
+
+For the full command map with per-group "when to use" guidance and practical advice, read [`references/api-surface.md`](references/api-surface.md).
 
 ## When in doubt, check `--help`
 
@@ -56,9 +58,11 @@ This is the fastest way to avoid hallucinated flags and malformed requests.
 
 ### Prefer `assert` for idempotent sync jobs
 
-Use `records assert` or `entries assert` when the user wants “create or update,” “upsert,” “sync,” or “make sure this exists.”
+Use `records assert` or `entries assert` when the user wants "create or update," "upsert," "sync," or "make sure this exists."
 
 Use `create` only when duplicates should fail loudly.
+
+See the Records and Entries sections in [`references/api-surface.md`](references/api-surface.md) for the full create/assert/update command set and body patterns.
 
 ### Choose the right multiselect update mode
 
@@ -88,7 +92,7 @@ When a command fails, read the error message before retrying:
 - **422 Unprocessable Entity**: the request body is malformed. Check the attribute types and value shapes against `attio attributes list-attributes` and `attio <group> <command> --help`. Common mistakes include missing the outer `data` wrapper and passing a bare value instead of an array.
 - **429 Too Many Requests**: back off and retry after a short delay.
 
-Do not retry blindly — diagnose first, fix the input, then retry.
+Do not retry blindly - diagnose first, fix the input, then retry.
 
 ## Pagination
 
@@ -113,7 +117,7 @@ EOF
 attio records create --object companies --body-file /tmp/record.json
 ```
 
-If you do not know the correct value shape for an attribute, inspect the object and attribute definitions first, then check `attio <group> <command> --help`.
+If you do not know the correct value shape for an attribute, inspect the object and attribute definitions first, then check `attio <group> <command> --help`. The "Body patterns you can reuse" section in [`references/api-surface.md`](references/api-surface.md) documents common body shapes for each resource type.
 
 ### Verify after writes
 
@@ -154,8 +158,4 @@ After mutating data, follow up with one of:
 - Use `comments` and `threads` for conversational discussion.
 - Use `tasks` for actionable follow-up with assignees and deadlines.
 
-## Read bundled references when needed
-
-- Read `references/api-surface.md` for the full command map and practical “when to use this” guidance for every command group.
-
-If the task touches an uncommon or ambiguous part of the API surface, read that reference before acting.
+For workflows involving meetings, call recordings, transcripts, files, webhooks, SCIM, or workspace members, read the corresponding section in [`references/api-surface.md`](references/api-surface.md) before acting — those resources have their own command sets and body shapes that are not covered above.
