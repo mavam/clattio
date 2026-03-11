@@ -1079,7 +1079,7 @@ export const manifest = [
     "method": "post",
     "path": "/v2/files",
     "summary": "Create a folder",
-    "description": "Creates a native folder entry or a connected file/folder entry on an object record.\n\nThis endpoint is in alpha and may be subject to breaking changes as we gather feedback.\n\nRequired scopes: `file:read-write`, `object_configuration:read`, `record_permission:read`.",
+    "description": "Creates a native folder entry or a connected file/folder entry on an object record.\n\nThis endpoint is in beta. We will aim to avoid breaking changes, but small updates may be made as we roll out to more users.\n\nRequired scopes: `file:read-write`, `object_configuration:read`, `record_permission:read`.",
     "parameters": [],
     "body": {
       "kind": "json",
@@ -1100,7 +1100,7 @@ export const manifest = [
     "method": "delete",
     "path": "/v2/files/{file_id}",
     "summary": "Delete a file",
-    "description": "Delete a single file by ID. Deleting a folder will delete all of its descendants.\n\nThis endpoint is in alpha and may be subject to breaking changes as we gather feedback.\n\nRequired scopes: `file:read-write`, `object_configuration:read`, `record_permission:read`.",
+    "description": "Delete a single file by ID. Deleting a folder will delete all of its descendants.\n\nThis endpoint is in beta. We will aim to avoid breaking changes, but small updates may be made as we roll out to more users.\n\nRequired scopes: `file:read-write`, `object_configuration:read`, `record_permission:read`.",
     "parameters": [
       {
         "name": "file_id",
@@ -1131,7 +1131,7 @@ export const manifest = [
     "method": "get",
     "path": "/v2/files/{file_id}/download",
     "summary": "Download a file",
-    "description": "Downloads a file by redirecting to a signed URL.\n\nThis endpoint is in alpha and may be subject to breaking changes as we gather feedback.\n\nRequired scopes: `object_configuration:read`, `record_permission:read`, `file:read`.",
+    "description": "Downloads a file by redirecting to a signed URL.\n\nThis endpoint is in beta. We will aim to avoid breaking changes, but small updates may be made as we roll out to more users.\n\nRequired scopes: `object_configuration:read`, `record_permission:read`, `file:read`.",
     "parameters": [
       {
         "name": "file_id",
@@ -1161,7 +1161,7 @@ export const manifest = [
     "method": "get",
     "path": "/v2/files/{file_id}",
     "summary": "Get a file",
-    "description": "Get a single file entry by ID.\n\nThis endpoint is in alpha and may be subject to breaking changes as we gather feedback.\n\nRequired scopes: `file:read`, `object_configuration:read`, `record_permission:read`.",
+    "description": "Get a single file entry by ID.\n\nThis endpoint is in beta. We will aim to avoid breaking changes, but small updates may be made as we roll out to more users.\n\nRequired scopes: `file:read`, `object_configuration:read`, `record_permission:read`.",
     "parameters": [
       {
         "name": "file_id",
@@ -1192,7 +1192,7 @@ export const manifest = [
     "method": "get",
     "path": "/v2/files",
     "summary": "List files",
-    "description": "Lists internal files, externally connected files and folders across the workspace. Optional query parameters may be provided to filter results by object, record, storage provider or parent folder.\n\nThis endpoint is in alpha and may be subject to breaking changes as we gather feedback.\n\nRequired scopes: `object_configuration:read`, `record_permission:read`, `file:read`.",
+    "description": "Lists internal files, externally connected files and folders across the workspace. Optional query parameters may be provided to filter results by object, record, storage provider or parent folder.\n\nThis endpoint is in beta. We will aim to avoid breaking changes, but small updates may be made as we roll out to more users.\n\nRequired scopes: `object_configuration:read`, `record_permission:read`, `file:read`.",
     "parameters": [
       {
         "name": "object",
@@ -1268,7 +1268,7 @@ export const manifest = [
     "method": "post",
     "path": "/v2/files/upload",
     "summary": "Upload a file",
-    "description": "Uploads a file to native Attio storage for a record. Send multipart/form-data with a single binary field named `file` together with the body fields `object`, `record_id`, and optional `parent_folder_id`. Maximum file size is 50 MB.\n\nThis endpoint is in alpha and may be subject to breaking changes as we gather feedback.\n\nRequired scopes: `file:read-write`, `object_configuration:read`, `record_permission:read`.",
+    "description": "Uploads a file to native Attio storage for a record. Send multipart/form-data with a single binary field named `file` together with the body fields `object`, `record_id`, and optional `parent_folder_id`. Maximum file size is 50 MB.\n\nThis endpoint is in beta. We will aim to avoid breaking changes, but small updates may be made as we roll out to more users.\n\nRequired scopes: `file:read-write`, `object_configuration:read`, `record_permission:read`.",
     "parameters": [],
     "body": {
       "kind": "multipart",
@@ -2258,6 +2258,25 @@ export const manifest = [
     },
     "scopes": [
       "scim_management:read"
+    ]
+  },
+  {
+    "id": "POST /scim/v2/Users",
+    "sdkFunction": "postScimV2Users",
+    "tag": "SCIM users",
+    "commandGroup": "scim-users",
+    "commandName": "create",
+    "method": "post",
+    "path": "/scim/v2/Users",
+    "summary": "Create SCIM user",
+    "description": "Creates a SCIM user in the workspace.\n\nRequired scopes: `scim_management:read-write`.",
+    "parameters": [],
+    "body": {
+      "kind": "none",
+      "required": false
+    },
+    "scopes": [
+      "scim_management:read-write"
     ]
   },
   {

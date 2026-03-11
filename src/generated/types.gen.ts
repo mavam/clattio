@@ -14040,6 +14040,46 @@ export type GetScimV2UsersResponses = {
 
 export type GetScimV2UsersResponse = GetScimV2UsersResponses[keyof GetScimV2UsersResponses];
 
+export type PostScimV2UsersData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/scim/v2/Users';
+};
+
+export type PostScimV2UsersResponses = {
+    /**
+     * Created
+     */
+    201: {
+        schemas: Array<string>;
+        id: string;
+        userName: string;
+        name: {
+            givenName: string;
+            familyName: string;
+        };
+        emails: Array<{
+            value: string;
+            primary: boolean;
+            type?: string;
+        }>;
+        roles: Array<{
+            value: string;
+            primary: boolean;
+        }>;
+        profileUrl?: string;
+        active: boolean;
+        meta: {
+            resourceType: string;
+            created: string;
+            lastModified: string;
+        };
+    };
+};
+
+export type PostScimV2UsersResponse = PostScimV2UsersResponses[keyof PostScimV2UsersResponses];
+
 export type GetScimV2GroupsData = {
     body?: never;
     path?: never;

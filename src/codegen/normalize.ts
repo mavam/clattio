@@ -5,8 +5,15 @@ import type {
   OperationParameter,
 } from "../manifest-types";
 
-type OpenApiObject = {
-  paths: Record<string, Record<string, any>>;
+type OpenApiOperation = {
+  operationId?: string;
+  [key: string]: any;
+};
+
+type OpenApiPathItem = Record<string, OpenApiOperation>;
+
+export type OpenApiObject = {
+  paths: Record<string, OpenApiPathItem>;
 };
 
 const HTTP_METHODS = new Set(["delete", "get", "patch", "post", "put"]);
@@ -26,7 +33,8 @@ const toOptionKey = (input: string): string =>
     .replace(/[^A-Za-z0-9]/g, "")
     .replace(/^[A-Z]/, (char) => char.toLowerCase());
 
-const toOptionName = (input: string): string => slugify(input).replace(/_/g, "-");
+const toOptionName = (input: string): string =>
+  slugify(input).replace(/_/g, "-");
 
 const toPascalCase = (input: string): string =>
   input
@@ -45,7 +53,10 @@ const singularize = (input: string): string => {
   return input;
 };
 
-export const synthesizeSdkFunctionName = (method: string, path: string): string => {
+export const synthesizeSdkFunctionName = (
+  method: string,
+  path: string,
+): string => {
   const parts = path
     .split("/")
     .filter(Boolean)
@@ -56,6 +67,25 @@ export const synthesizeSdkFunctionName = (method: string, path: string): string 
       return toPascalCase(segment);
     });
   return `${method.toLowerCase()}${parts.join("")}`;
+};
+
+export const applySyntheticOperationIds = (spec: OpenApiObject): void => {
+  for (const [path, pathItem] of Object.entries(spec.paths ?? {})) {
+    for (const [method, operation] of Object.entries(pathItem)) {
+      if (!HTTP_METHODS.has(method)) {
+        continue;
+      }
+
+      if (
+        typeof operation.operationId === "string" &&
+        operation.operationId.trim()
+      ) {
+        continue;
+      }
+
+      operation.operationId = synthesizeSdkFunctionName(method, path);
+    }
+  }
 };
 
 const normalizeParameterType = (schema: any): OperationParameter["type"] => {
@@ -73,9 +103,14 @@ const normalizeParameterType = (schema: any): OperationParameter["type"] => {
   }
 };
 
-const normalizeParameters = (pathItem: any, operation: any): OperationParameter[] =>
+const normalizeParameters = (
+  pathItem: any,
+  operation: any,
+): OperationParameter[] =>
   [...(pathItem.parameters ?? []), ...(operation.parameters ?? [])]
-    .filter((parameter: any) => parameter.in === "path" || parameter.in === "query")
+    .filter(
+      (parameter: any) => parameter.in === "path" || parameter.in === "query",
+    )
     .map((parameter: any) => ({
       name: parameter.name,
       optionKey: toOptionKey(parameter.name),
@@ -88,14 +123,16 @@ const normalizeParameters = (pathItem: any, operation: any): OperationParameter[
 
 const normalizeMultipartFields = (schema: any): MultipartFieldDescriptor[] => {
   const required = new Set<string>(schema.required ?? []);
-  return Object.entries(schema.properties ?? {}).map(([name, property]: [string, any]) => ({
-    name,
-    optionKey: toOptionKey(name),
-    optionName: toOptionName(name),
-    required: required.has(name),
-    description: property.description,
-    type: property.format === "binary" ? "file" : "string",
-  }));
+  return Object.entries(schema.properties ?? {}).map(
+    ([name, property]: [string, any]) => ({
+      name,
+      optionKey: toOptionKey(name),
+      optionName: toOptionName(name),
+      required: required.has(name),
+      description: property.description,
+      type: property.format === "binary" ? "file" : "string",
+    }),
+  );
 };
 
 const normalizeBody = (operation: any): OperationBodyDescriptor => {
@@ -107,7 +144,9 @@ const normalizeBody = (operation: any): OperationBodyDescriptor => {
     return {
       kind: "multipart",
       required: Boolean(operation.requestBody.required),
-      fields: normalizeMultipartFields(operation.requestBody.content["multipart/form-data"].schema),
+      fields: normalizeMultipartFields(
+        operation.requestBody.content["multipart/form-data"].schema,
+      ),
     };
   }
 
@@ -125,9 +164,15 @@ const extractScopes = (operation: any): string[] =>
 
 const deriveCommandGroup = (tag: string): string => slugify(tag);
 
-const deriveBaseCommandName = (summary: string): string => slugify(summary.split(/\s+/)[0] ?? "run");
+const deriveBaseCommandName = (summary: string): string =>
+  slugify(summary.split(/\s+/)[0] ?? "run");
 
-const deriveQualifier = (summary: string, _tag: string, path: string, method: string): string => {
+const deriveQualifier = (
+  summary: string,
+  _tag: string,
+  path: string,
+  method: string,
+): string => {
   const parenthetical = summary.match(/\(([^)]+)\)/)?.[1];
   if (parenthetical) {
     return slugify(parenthetical);
@@ -156,11 +201,19 @@ export const normalizeSpec = (spec: OpenApiObject): OperationManifest[] => {
       }
 
       const tag = String(operation.tags?.[0] ?? "API");
-      const summary = String(operation.summary ?? `${method.toUpperCase()} ${path}`);
+      const summary = String(
+        operation.summary ?? `${method.toUpperCase()} ${path}`,
+      );
+
+      const sdkFunction =
+        typeof operation.operationId === "string" &&
+        operation.operationId.trim()
+          ? operation.operationId
+          : synthesizeSdkFunctionName(method, path);
 
       manifests.push({
         id: `${method.toUpperCase()} ${path}`,
-        sdkFunction: synthesizeSdkFunctionName(method, path),
+        sdkFunction,
         tag,
         commandGroup: deriveCommandGroup(tag),
         commandName: deriveBaseCommandName(summary),
@@ -191,7 +244,12 @@ export const normalizeSpec = (spec: OpenApiObject): OperationManifest[] => {
 
     const used = new Set<string>();
     for (const manifest of duplicates) {
-      const qualifier = deriveQualifier(manifest.summary, manifest.tag, manifest.path, manifest.method);
+      const qualifier = deriveQualifier(
+        manifest.summary,
+        manifest.tag,
+        manifest.path,
+        manifest.method,
+      );
       let candidate = `${manifest.commandName}-${qualifier}`;
       let counter = 2;
 

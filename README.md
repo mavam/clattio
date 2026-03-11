@@ -6,7 +6,7 @@ This exists to fill a gap in the current MCP workflow: the MCP can read Attio we
 
 Use it to:
 
-- create, update, and inspect Attio objects, records, lists, and entries
+- create, update, and inspect Attio objects, records, lists, entries, and integration resources such as files, webhooks, and SCIM users
 - perform Attio write operations that are blocked through the MCP path
 - script Attio workflows with raw JSON output
 - manage Attio from the shell without hand-writing REST calls

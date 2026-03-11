@@ -1,10 +1,36 @@
 import { describe, expect, it } from "vitest";
 
-import { normalizeSpec, synthesizeSdkFunctionName } from "../src/codegen/normalize";
+import {
+  applySyntheticOperationIds,
+  normalizeSpec,
+  synthesizeSdkFunctionName,
+} from "../src/codegen/normalize";
 
 describe("normalizeSpec", () => {
   it("derives stable SDK function names from method and path", () => {
-    expect(synthesizeSdkFunctionName("get", "/v2/objects/{object}/records/{record_id}")).toBe(
+    expect(
+      synthesizeSdkFunctionName(
+        "get",
+        "/v2/objects/{object}/records/{record_id}",
+      ),
+    ).toBe("getV2ObjectsByObjectRecordsByRecordId");
+  });
+
+  it("uses patched operationIds as the SDK function source of truth", () => {
+    const spec = {
+      paths: {
+        "/v2/objects/{object}/records/{record_id}": {
+          get: {
+            summary: "Get a record",
+            tags: ["Records"],
+          },
+        },
+      },
+    };
+
+    applySyntheticOperationIds(spec);
+
+    expect(normalizeSpec(spec)[0]?.sdkFunction).toBe(
       "getV2ObjectsByObjectRecordsByRecordId",
     );
   });

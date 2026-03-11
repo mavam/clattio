@@ -438,16 +438,19 @@ Use the `scim-*` groups for identity-management and provisioning surfaces.
 Typical use cases:
 
 - Inspect SCIM users and groups.
+- Create a SCIM user when provisioning needs to start from the CLI surface.
 - Learn which SCIM schemas the service supports.
 - Troubleshoot enterprise identity sync.
 
 Commands:
 
+- `attio scim-users create` — create a SCIM user.
 - `attio scim-users list` — list SCIM users.
 - `attio scim-groups list` — list SCIM groups.
 - `attio scim-schemas list` — list supported SCIM schemas.
 
 Practical advice:
 
-- These commands are mostly administrative and read-only in this CLI surface.
+- These commands are still primarily administrative. The only write currently exposed here is `scim-users create`.
+- Check `attio scim-users create --help` before acting. The generated surface currently exposes no body or flags for this endpoint, so treat it as spec-driven and verify the live behavior before relying on it in an automation flow.
 - If the user is not explicitly asking about provisioning or identity sync, they probably do not need the SCIM commands.

@@ -19,7 +19,7 @@ Map the user's request to the right resource type before you run commands:
 - **Note / comment / thread / task**: collaboration objects around records or entries.
 - **Meeting / call recording / transcript**: synced activity and conversation data.
 - **File**: uploaded or linked file/folder content on records.
-- **Webhook / SCIM / workspace member / meta**: integration and administration surfaces.
+- **Webhook / SCIM / workspace member / meta**: integration and administration surfaces, including limited SCIM provisioning.
 
 If a user says "contact," "company," "deal," or "CRM item," they usually mean a **record**.
 If they say "pipeline," "queue," "segment," or "saved collection," they often mean a **list** plus **entries**.
