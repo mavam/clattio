@@ -9,15 +9,15 @@ Create, update, and inspect Attio objects, records, lists, entries, notes, tasks
 Grab an API token from your [Attio workspace settings](https://app.attio.com), then:
 
 ```sh
-bunx clattio auth token set
-bunx clattio objects list
-bunx clattio records search --object people --query "Jane"
+npx clattio auth token set
+npx clattio objects list
+npx clattio records search --object people --query "Jane"
 ```
 
 For a persistent global command:
 
 ```sh
-npm install -g clattio
+bun install -g clattio
 attio objects list
 ```
 
