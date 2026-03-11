@@ -92,7 +92,7 @@ When a command fails, read the error message before retrying:
 - **422 Unprocessable Entity**: the request body is malformed. Check the attribute types and value shapes against `attio attributes list-attributes` and `attio <group> <command> --help`. Common mistakes include missing the outer `data` wrapper and passing a bare value instead of an array.
 - **429 Too Many Requests**: back off and retry after a short delay.
 
-Do not retry blindly - diagnose first, fix the input, then retry.
+Do not retry blindly — diagnose first, fix the input, then retry. After a body validation error or unknown-option error, check `attio <group> <command> --help` and consult the per-command examples in [`references/api-surface.md`](references/api-surface.md) before attempting another variant.
 
 ## Pagination
 
@@ -151,6 +151,28 @@ After mutating data, follow up with one of:
 2. Add list-specific attributes if needed.
 3. Use `attio entries assert` or `attio entries create` to add records.
 4. Update entry statuses or tags with the entry update commands.
+
+### Find a record and check list membership
+
+This is a common pattern when someone asks "add X to list Y" or "is X already in list Y":
+
+1. Identify the list slug:
+   ```sh
+   attio lists list
+   ```
+2. Search for the record by name:
+   ```sh
+   attio records search --body '{"query": "Acme", "objects": ["companies"], "request_as": {"type": "workspace"}}'
+   ```
+   If search fails or the body shape is unclear, fall back to paginated listing with client-side filtering:
+   ```sh
+   attio records list-records --object companies --body '{"limit": 500, "offset": 0}'
+   ```
+3. Check which lists the record already belongs to:
+   ```sh
+   attio records list-record-entries --object companies --record-id <id>
+   ```
+4. Compare the returned `list_id` values against the target list. If the record is not yet a member, add it with `entries create` or `entries assert`.
 
 ### Add collaboration context
 

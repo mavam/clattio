@@ -74,6 +74,14 @@ Common patterns:
 
 For records and entries, the values object is keyed by attribute slug or ID, and the values are arrays.
 
+### Commands that require a JSON body even for reads
+
+Several list and search commands are generated from POST endpoints and require a JSON body, even when you just want defaults. Omitting the body produces `This command requires a JSON body`. Pass `--body '{}'` when no filters are needed:
+
+- `attio records list-records --object <object> --body '{}'`
+- `attio records search --body-file <json>` (body is always required and has mandatory fields — see [Records](#records) for the exact shape)
+- `attio entries list-entries --list <list> --body '{}'`
+
 ### Create vs assert vs update
 
 - Use **create** when duplicates should fail.
@@ -158,12 +166,47 @@ Commands:
 - `attio records list-record-entries --object <object> --record-id <id>` — see which lists a record belongs to.
 - `attio records delete --object <object> --record-id <id>` — delete a record.
 
+Examples:
+
+**Search for a company by name** — `records search` is body-only; it has no `--object` or `--query` flags. The body requires `query`, `objects`, and `request_as`:
+
+```sh
+cat > /tmp/search.json <<'EOF'
+{
+  "query": "Acme",
+  "objects": ["companies"],
+  "request_as": {"type": "workspace"}
+}
+EOF
+attio records search --body-file /tmp/search.json
+```
+
+Use `"request_as": {"type": "workspace"}` to search across the whole workspace. To scope results to what one member can see, use `{"type": "workspace-member", "workspace_member_id": "<id>"}` instead.
+
+**Browse records with pagination** — `records list-records` requires a body even when you just want defaults:
+
+```sh
+# First page
+attio records list-records --object companies --body '{"limit": 500, "offset": 0}'
+# Next page
+attio records list-records --object companies --body '{"limit": 500, "offset": 500}'
+```
+
+Keep incrementing `offset` until the response returns fewer items than `limit`.
+
+**Check which lists a record belongs to** — `list-record-entries` does not need a body:
+
+```sh
+attio records list-record-entries --object companies --record-id <id>
+```
+
 Practical advice:
 
 - Prefer `assert` for imports and syncs from other systems.
 - Prefer `create` for strict data entry when duplicates should raise an error.
 - `search` is convenient but eventually consistent; use direct gets or list endpoints when freshness matters.
 - Read back the record after a write if you need the canonical Attio value representation.
+- If `search` fails or its body shape is unclear, fall back to `list-records` with client-side filtering.
 
 ## Lists
 
@@ -209,6 +252,14 @@ Commands:
 - `attio entries update-overwrite-multiselect-values --list <list> --entry-id <id> --body-file <json>` — replace multiselect values on the entry.
 - `attio entries list-attribute-values-for-list-entry --list <list> --entry-id <id> --attribute <attr>` — inspect one entry field.
 - `attio entries delete --list <list> --entry-id <id>` — remove a record from a list.
+
+Examples:
+
+**Browse entries in a list** — `list-entries` requires a body even for defaults:
+
+```sh
+attio entries list-entries --list startup_fundraising --body '{}'
+```
 
 Practical advice:
 
