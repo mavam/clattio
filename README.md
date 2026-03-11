@@ -2,7 +2,7 @@
 
 A command-line interface for managing [Attio](https://attio.com) from your terminal.
 
-Create, update, and inspect Attio objects, records, lists, entries, notes, tasks, webhooks, and more — without hand-writing REST calls.
+Create, update, and inspect Attio objects, records, lists, entries, notes, tasks, webhooks, and more without hand-writing REST calls.
 
 ## 🏁 Get started
 
@@ -20,6 +20,16 @@ For a persistent global command:
 npm install -g clattio
 attio objects list
 ```
+
+## 🤖 Agent skill
+
+If you use an AI coding agent that supports [skills](https://github.com/anthropics/skills), you can install clattio as a skill:
+
+```sh
+npx skills add mavam/clattio
+```
+
+This gives your agent the knowledge to drive the `attio` CLI on your behalf, from querying records to managing lists, creating notes, and more.
 
 ## 🔐 Authenticate
 
