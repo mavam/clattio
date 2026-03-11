@@ -1,0 +1,7 @@
+created: 2026-03-11
+title: Initial release of the Attio CLI
+intro: >-
+  This first release of attio lets you manage Attio from the terminal with generated
+  command coverage across Attio resources. You can inspect your workspace schema,
+  upsert records, manage list entries, create tasks, and automate downstream integrations
+  with webhooks without hand-writing REST calls.
