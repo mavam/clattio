@@ -6,27 +6,28 @@ Create, update, and inspect Attio objects, records, lists, entries, notes, tasks
 
 ## 🏁 Get started
 
+Install:
+
+```sh
+bunx install -g clattio
+```
+
 Grab an API token from your [Attio workspace settings](https://app.attio.com), then:
 
 ```sh
-npx clattio auth token set
-npx clattio objects list
-npx clattio records search --object people --query "Jane"
-```
-
-For a persistent global command:
-
-```sh
-bun install -g clattio
+attio auth token set
 attio objects list
+attio records search --object people --query "Jane"
 ```
+
+Scroll down for the OAuth setup.
 
 ## 🤖 Agent skill
 
 If you use an AI coding agent that supports [skills](https://github.com/anthropics/skills), you can install clattio as a skill:
 
 ```sh
-npx skills add mavam/clattio
+bunx skills add mavam/clattio
 ```
 
 This gives your agent the knowledge to drive the `attio` CLI on your behalf, from querying records to managing lists, creating notes, and more.
