@@ -56,4 +56,28 @@ describe("normalizeSpec", () => {
       "update-overwrite-multiselect-values",
     ]);
   });
+
+  it("keeps canonical group list commands concise", () => {
+    const manifest = normalizeSpec({
+      paths: {
+        "/v2/objects": {
+          get: {
+            summary: "List objects",
+            tags: ["Objects"],
+          },
+        },
+        "/v2/objects/{object}/views": {
+          get: {
+            summary: "List views for object",
+            tags: ["Objects"],
+          },
+        },
+      },
+    });
+
+    expect(manifest.map((entry) => entry.commandName)).toEqual([
+      "list",
+      "list-views-for-object",
+    ]);
+  });
 });

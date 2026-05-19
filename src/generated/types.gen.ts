@@ -309,7 +309,7 @@ export type OutputValue = {
     /**
      * The ISO4217 currency code representing the currency that the value is stored in.
      */
-    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
     /**
      * The attribute type of the value.
      */
@@ -642,7 +642,7 @@ export type Attribute = {
             /**
              * The ISO4217 code representing the currency that values for this attribute should be stored in.
              */
-            default_currency_code: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+            default_currency_code: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
             /**
              * How the currency should be displayed across the app. "code" will display the ISO currency code e.g. "USD", "name" will display the localized currency name e.g. "British pound", "narrowSymbol" will display "$1" instead of "US$1" and "symbol" will display a localized currency symbol such as "$".
              */
@@ -658,6 +658,31 @@ export type Attribute = {
             allowed_object_ids: Array<string> | null;
         };
     };
+};
+
+export type ListView = {
+    id: {
+        /**
+         * A UUID identifying the workspace this view belongs to.
+         */
+        workspace_id: string;
+        /**
+         * A UUID identifying the list this view belongs to.
+         */
+        list_id: string;
+        /**
+         * A UUID identifying this view. Use this value as `filter_view_id` when listing entries.
+         */
+        view_id: string;
+    };
+    /**
+     * The title of the view shown in the Attio app.
+     */
+    title: string;
+    /**
+     * When the view was created.
+     */
+    created_at: string;
 };
 
 export type List = {
@@ -744,6 +769,31 @@ export type Object = {
     plural_noun: string | null;
     /**
      * When the object was created.
+     */
+    created_at: string;
+};
+
+export type ObjectView = {
+    id: {
+        /**
+         * A UUID identifying the workspace this view belongs to.
+         */
+        workspace_id: string;
+        /**
+         * A UUID identifying the object this view belongs to.
+         */
+        object_id: string;
+        /**
+         * A UUID identifying this view. Use this value as `filter_view_id` when listing records.
+         */
+        view_id: string;
+    };
+    /**
+     * The title of the view shown in the Attio app.
+     */
+    title: string;
+    /**
+     * When the view was created.
      */
     created_at: string;
 };
@@ -1332,6 +1382,10 @@ export type Task = {
      */
     is_completed: boolean;
     /**
+     * When the task was completed, or null if it has not been completed.
+     */
+    completed_at: string | null;
+    /**
      * Records linked to the task. Creating record links within task content text is not possible via the API at present.
      */
     linked_records: Array<{
@@ -1438,6 +1492,15 @@ export type PostV2ObjectsData = {
 };
 
 export type PostV2ObjectsErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        status_code: 400;
+        type: 'invalid_request_error';
+        code: 'quota_exceeded';
+        message: string;
+    };
     /**
      * Conflict
      */
@@ -1569,6 +1632,59 @@ export type PatchV2ObjectsByObjectResponses = {
 
 export type PatchV2ObjectsByObjectResponse = PatchV2ObjectsByObjectResponses[keyof PatchV2ObjectsByObjectResponses];
 
+export type GetV2ObjectsByObjectViewsData = {
+    body?: never;
+    path: {
+        /**
+         * A UUID or slug to identify the object.
+         */
+        object: string;
+    };
+    query?: {
+        /**
+         * `true` to include archived views. See our [archiving guide](/docs/archiving-vs-deleting) for more information on archiving.
+         */
+        show_archived?: boolean;
+        /**
+         * The maximum number of views to return. Must be between 1 and 1000. Defaults to 500.
+         */
+        limit?: number;
+        /**
+         * A pagination cursor from a previous response's `pagination.next_cursor`. Omit for the first page.
+         */
+        cursor?: string;
+    };
+    url: '/v2/objects/{object}/views';
+};
+
+export type GetV2ObjectsByObjectViewsErrors = {
+    /**
+     * Not Found
+     */
+    404: {
+        status_code: 404;
+        type: 'invalid_request_error';
+        code: 'not_found';
+        message: string;
+    };
+};
+
+export type GetV2ObjectsByObjectViewsError = GetV2ObjectsByObjectViewsErrors[keyof GetV2ObjectsByObjectViewsErrors];
+
+export type GetV2ObjectsByObjectViewsResponses = {
+    /**
+     * Success
+     */
+    200: {
+        data: Array<ObjectView>;
+        pagination: {
+            next_cursor: string | null;
+        };
+    };
+};
+
+export type GetV2ObjectsByObjectViewsResponse = GetV2ObjectsByObjectViewsResponses[keyof GetV2ObjectsByObjectViewsResponses];
+
 export type GetV2ByTargetByIdentifierAttributesData = {
     body?: never;
     path: {
@@ -1625,7 +1741,7 @@ export type PostV2ByTargetByIdentifierAttributesData = {
              */
             api_slug: string;
             /**
-             * The type of the attribute. This value affects the possible `config` values. Attributes of type "status" are not supported on objects.
+             * The type of the attribute. This value affects the possible `config` values.
              */
             type: 'text' | 'number' | 'checkbox' | 'currency' | 'date' | 'timestamp' | 'rating' | 'status' | 'select' | 'record-reference' | 'actor-reference' | 'location' | 'domain' | 'email-address' | 'phone-number';
             /**
@@ -1679,7 +1795,7 @@ export type PostV2ByTargetByIdentifierAttributesData = {
                     /**
                      * The ISO4217 code representing the currency that values for this attribute should be stored in.
                      */
-                    default_currency_code: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+                    default_currency_code: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
                     /**
                      * How the currency should be displayed across the app. "code" will display the ISO currency code e.g. "USD", "name" will display the localized currency name e.g. "British pound", "narrowSymbol" will display "$1" instead of "US$1" and "symbol" will display a localized currency symbol such as "$".
                      */
@@ -1843,7 +1959,7 @@ export type PatchV2ByTargetByIdentifierAttributesByAttributeData = {
                     /**
                      * The ISO4217 code representing the currency that values for this attribute should be stored in.
                      */
-                    default_currency_code: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+                    default_currency_code: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
                     /**
                      * How the currency should be displayed across the app. "code" will display the ISO currency code e.g. "USD", "name" will display the localized currency name e.g. "British pound", "narrowSymbol" will display "$1" instead of "US$1" and "symbol" will display a localized currency symbol such as "$".
                      */
@@ -2119,7 +2235,7 @@ export type GetV2ByTargetByIdentifierAttributesByAttributeStatusesData = {
     body?: never;
     path: {
         /**
-         * Whether the attribute is on an object or a list. Please note that the company and people objects do not support status attributes at this time.
+         * Whether the attribute is on an object or a list.
          */
         target: 'lists' | 'objects';
         /**
@@ -2184,7 +2300,7 @@ export type PostV2ByTargetByIdentifierAttributesByAttributeStatusesData = {
     };
     path: {
         /**
-         * Whether the attribute is on an object or a list. Please note that company and person objects do not support status attributes at this time.
+         * Whether the attribute is on an object or a list.
          */
         target: 'lists' | 'objects';
         /**
@@ -2266,7 +2382,7 @@ export type PatchV2ByTargetByIdentifierAttributesByAttributeStatusesByStatusData
     };
     path: {
         /**
-         * Whether the attribute is on an object or a list. Please note that company and person objects do not support status attributes at this time.
+         * Whether the attribute is on an object or a list.
          */
         target: 'lists' | 'objects';
         /**
@@ -2332,11 +2448,15 @@ export type PatchV2ByTargetByIdentifierAttributesByAttributeStatusesByStatusResp
 export type PostV2ObjectsByObjectRecordsQueryData = {
     body: {
         /**
-         * An object used to filter results to a subset of results. See the [full guide to filtering and sorting here](/rest-api/guides/filtering-and-sorting).
+         * An object used to filter results to a subset of results. Cannot be used together with `filter_view_id`. See the [full guide to filtering and sorting here](/rest-api/guides/filtering-and-sorting).
          */
         filter?: {
             [key: string]: unknown;
         };
+        /**
+         * UUID of a saved view on this object or list. When set, results are filtered using that view's filter configuration. Cannot be used together with `filter`. Note: sorts, limits, and offsets are applied independently and are not taken from the view. All attributes are returned regardless of which attributes are visible in the view.
+         */
+        filter_view_id?: string;
         /**
          * An object used to sort results. See the [full guide to filtering and sorting here](/rest-api/guides/filtering-and-sorting).
          */
@@ -2537,7 +2657,7 @@ export type PostV2ObjectsByObjectRecordsQueryResponses = {
                     /**
                      * The ISO4217 currency code representing the currency that the value is stored in.
                      */
-                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
                     /**
                      * The attribute type of the value.
                      */
@@ -3202,7 +3322,7 @@ export type PostV2ObjectsByObjectRecordsResponses = {
                     /**
                      * The ISO4217 currency code representing the currency that the value is stored in.
                      */
-                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
                     /**
                      * The attribute type of the value.
                      */
@@ -3872,7 +3992,7 @@ export type PutV2ObjectsByObjectRecordsResponses = {
                     /**
                      * The ISO4217 currency code representing the currency that the value is stored in.
                      */
-                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
                     /**
                      * The attribute type of the value.
                      */
@@ -4564,7 +4684,7 @@ export type GetV2ObjectsByObjectRecordsByRecordIdResponses = {
                     /**
                      * The ISO4217 currency code representing the currency that the value is stored in.
                      */
-                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
                     /**
                      * The attribute type of the value.
                      */
@@ -5233,7 +5353,7 @@ export type PatchV2ObjectsByObjectRecordsByRecordIdResponses = {
                     /**
                      * The ISO4217 currency code representing the currency that the value is stored in.
                      */
-                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
                     /**
                      * The attribute type of the value.
                      */
@@ -5902,7 +6022,7 @@ export type PutV2ObjectsByObjectRecordsByRecordIdResponses = {
                     /**
                      * The ISO4217 currency code representing the currency that the value is stored in.
                      */
-                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
                     /**
                      * The attribute type of the value.
                      */
@@ -6552,7 +6672,7 @@ export type GetV2ObjectsByObjectRecordsByRecordIdAttributesByAttributeValuesResp
             /**
              * The ISO4217 currency code representing the currency that the value is stored in.
              */
-            currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+            currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
             /**
              * The attribute type of the value.
              */
@@ -7469,14 +7589,71 @@ export type PatchV2ListsByListResponses = {
 
 export type PatchV2ListsByListResponse = PatchV2ListsByListResponses[keyof PatchV2ListsByListResponses];
 
+export type GetV2ListsByListViewsData = {
+    body?: never;
+    path: {
+        /**
+         * A UUID or slug to identify the list.
+         */
+        list: string;
+    };
+    query?: {
+        /**
+         * `true` to include archived views. See our [archiving guide](/docs/archiving-vs-deleting) for more information on archiving.
+         */
+        show_archived?: boolean;
+        /**
+         * The maximum number of views to return. Must be between 1 and 1000. Defaults to 500.
+         */
+        limit?: number;
+        /**
+         * A pagination cursor from a previous response's `pagination.next_cursor`. Omit for the first page.
+         */
+        cursor?: string;
+    };
+    url: '/v2/lists/{list}/views';
+};
+
+export type GetV2ListsByListViewsErrors = {
+    /**
+     * Not Found
+     */
+    404: {
+        status_code: 404;
+        type: 'invalid_request_error';
+        code: 'not_found';
+        message: string;
+    };
+};
+
+export type GetV2ListsByListViewsError = GetV2ListsByListViewsErrors[keyof GetV2ListsByListViewsErrors];
+
+export type GetV2ListsByListViewsResponses = {
+    /**
+     * Success
+     */
+    200: {
+        data: Array<ListView>;
+        pagination: {
+            next_cursor: string | null;
+        };
+    };
+};
+
+export type GetV2ListsByListViewsResponse = GetV2ListsByListViewsResponses[keyof GetV2ListsByListViewsResponses];
+
 export type PostV2ListsByListEntriesQueryData = {
     body: {
         /**
-         * An object used to filter results to a subset of results. See the [full guide to filtering and sorting here](/rest-api/guides/filtering-and-sorting).
+         * An object used to filter results to a subset of results. Cannot be used together with `filter_view_id`. See the [full guide to filtering and sorting here](/rest-api/guides/filtering-and-sorting).
          */
         filter?: {
             [key: string]: unknown;
         };
+        /**
+         * UUID of a saved view on this object or list. When set, results are filtered using that view's filter configuration. Cannot be used together with `filter`. Note: sorts, limits, and offsets are applied independently and are not taken from the view. All attributes are returned regardless of which attributes are visible in the view.
+         */
+        filter_view_id?: string;
         /**
          * An object used to sort results. See the [full guide to filtering and sorting here](/rest-api/guides/filtering-and-sorting).
          */
@@ -7672,7 +7849,7 @@ export type PostV2ListsByListEntriesQueryResponses = {
                     /**
                      * The ISO4217 currency code representing the currency that the value is stored in.
                      */
-                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
                     /**
                      * The attribute type of the value.
                      */
@@ -8349,7 +8526,7 @@ export type PostV2ListsByListEntriesResponses = {
                     /**
                      * The ISO4217 currency code representing the currency that the value is stored in.
                      */
-                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
                     /**
                      * The attribute type of the value.
                      */
@@ -9026,7 +9203,7 @@ export type PutV2ListsByListEntriesResponses = {
                     /**
                      * The ISO4217 currency code representing the currency that the value is stored in.
                      */
-                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
                     /**
                      * The attribute type of the value.
                      */
@@ -9722,7 +9899,7 @@ export type GetV2ListsByListEntriesByEntryIdResponses = {
                     /**
                      * The ISO4217 currency code representing the currency that the value is stored in.
                      */
-                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
                     /**
                      * The attribute type of the value.
                      */
@@ -10395,7 +10572,7 @@ export type PatchV2ListsByListEntriesByEntryIdResponses = {
                     /**
                      * The ISO4217 currency code representing the currency that the value is stored in.
                      */
-                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
                     /**
                      * The attribute type of the value.
                      */
@@ -11068,7 +11245,7 @@ export type PutV2ListsByListEntriesByEntryIdResponses = {
                     /**
                      * The ISO4217 currency code representing the currency that the value is stored in.
                      */
-                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+                    currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
                     /**
                      * The attribute type of the value.
                      */
@@ -11709,7 +11886,7 @@ export type GetV2ListsByListEntriesByEntryIdAttributesByAttributeValuesResponses
             /**
              * The ISO4217 currency code representing the currency that the value is stored in.
              */
-            currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
+            currency_code?: 'ARS' | 'AUD' | 'BRL' | 'BGN' | 'CAD' | 'CLP' | 'CNY' | 'COP' | 'CZK' | 'DKK' | 'EUR' | 'FJD' | 'HKD' | 'HUF' | 'ISK' | 'INR' | 'ILS' | 'JPY' | 'KES' | 'KRW' | 'MYR' | 'MXN' | 'NTD' | 'NZD' | 'NGN' | 'NOK' | 'XPF' | 'PEN' | 'PHP' | 'PLN' | 'GBP' | 'RWF' | 'SAR' | 'SGD' | 'ZAR' | 'SEK' | 'CHF' | 'THB' | 'AED' | 'UYU' | 'USD';
             /**
              * The attribute type of the value.
              */
@@ -12474,9 +12651,9 @@ export type GetV2TasksData = {
          */
         offset?: number;
         /**
-         * Optionally sort the results. "created_at:asc" returns oldest results first, "created_at:desc" returns the newest results first. If unspecified, defaults to "created_at:asc" (oldest results first).
+         * Optionally sort the results. "created_at:asc" returns oldest results first, "created_at:desc" returns the newest results first. "completed_at:asc" and "completed_at:desc" sort by completion time. With "completed_at:asc", incomplete tasks (no completion date) appear first, followed by completed tasks oldest-first. With "completed_at:desc", completed tasks appear first (newest-first), followed by incomplete tasks. To exclude incomplete tasks, filter by is_completed. If unspecified, defaults to "created_at:asc" (oldest results first).
          */
-        sort?: 'created_at:asc' | 'created_at:desc';
+        sort?: 'created_at:asc' | 'created_at:desc' | 'completed_at:asc' | 'completed_at:desc';
         /**
          * Pass a value to this parameter to filter results to only those tasks that contain the specified record in the `linked_records` property of the task. This parameter should identify the object that the linked record belongs to. For example, if filtering to tasks that link to a specific person record, this parameter should be `people`. If provided, `linked_record_id` must also be provided.
          */
@@ -12528,9 +12705,9 @@ export type PostV2TasksData = {
              */
             is_completed: boolean;
             /**
-             * Records linked to the task. Creating record links within task content text is not possible via the API at present.
+             * Records linked to the task. Records can be linked by domain (for companies), email address (for people), record ID (for all objects) or by a unique matching attribute (for all objects). Creating record links within task content text is not possible via the API at present.
              */
-            linked_records: Array<{
+            linked_records: Array<string> | Array<{
                 /**
                  * The ID or slug of the parent object the tasks refers to. This can reference both standard and custom objects.`
                  */
@@ -12723,9 +12900,9 @@ export type PatchV2TasksByTaskIdData = {
              */
             is_completed?: boolean;
             /**
-             * Records linked to the task. Creating record links within task content text is not possible via the API at present.
+             * Records linked to the task. Records can be linked by domain (for companies), email address (for people), record ID (for all objects) or by a unique matching attribute (for all objects). Creating record links within task content text is not possible via the API at present.
              */
-            linked_records?: Array<{
+            linked_records?: Array<string> | Array<{
                 /**
                  * The ID or slug of the parent object the tasks refers to. This can reference both standard and custom objects.`
                  */
@@ -14101,6 +14278,288 @@ export type GetScimV2GroupsResponses = {
 };
 
 export type GetScimV2GroupsResponse = GetScimV2GroupsResponses[keyof GetScimV2GroupsResponses];
+
+export type PostScimV2GroupsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/scim/v2/Groups';
+};
+
+export type PostScimV2GroupsResponses = {
+    /**
+     * Created
+     */
+    201: {
+        schemas: Array<string>;
+        id: string;
+        displayName: string;
+        members: Array<{
+            value: string;
+            $ref: string;
+        }>;
+        meta: {
+            resourceType: string;
+            created: string;
+            lastModified: string;
+        };
+    };
+};
+
+export type PostScimV2GroupsResponse = PostScimV2GroupsResponses[keyof PostScimV2GroupsResponses];
+
+export type DeleteScimV2UsersByUserIdData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/scim/v2/Users/{user_id}';
+};
+
+export type DeleteScimV2UsersByUserIdResponses = {
+    /**
+     * No Content
+     */
+    204: {
+        [key: string]: unknown;
+    };
+};
+
+export type DeleteScimV2UsersByUserIdResponse = DeleteScimV2UsersByUserIdResponses[keyof DeleteScimV2UsersByUserIdResponses];
+
+export type GetScimV2UsersByUserIdData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/scim/v2/Users/{user_id}';
+};
+
+export type GetScimV2UsersByUserIdResponses = {
+    /**
+     * Success
+     */
+    200: {
+        schemas: Array<string>;
+        id: string;
+        userName: string;
+        name: {
+            familyName: string;
+            givenName: string;
+        };
+        emails: Array<{
+            value: string;
+            primary: boolean;
+        }>;
+        active: boolean;
+        roles: Array<{
+            value: string;
+            primary: boolean;
+        }>;
+        meta: {
+            resourceType: string;
+            created: string;
+            lastModified: string;
+        };
+    };
+};
+
+export type GetScimV2UsersByUserIdResponse = GetScimV2UsersByUserIdResponses[keyof GetScimV2UsersByUserIdResponses];
+
+export type PatchScimV2UsersByUserIdData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/scim/v2/Users/{user_id}';
+};
+
+export type PatchScimV2UsersByUserIdResponses = {
+    /**
+     * Success
+     */
+    200: {
+        schemas: Array<string>;
+        id: string;
+        userName: string;
+        name: {
+            givenName: string;
+            familyName: string;
+        };
+        emails: Array<{
+            value: string;
+            primary: boolean;
+            type?: string;
+        }>;
+        roles: Array<{
+            value: string;
+            primary: boolean;
+        }>;
+        profileUrl: string | null;
+        active: boolean;
+        meta: {
+            resourceType: string;
+            created: string;
+            lastModified: string;
+        };
+    };
+    /**
+     * No Content
+     */
+    204: {
+        [key: string]: unknown;
+    };
+};
+
+export type PatchScimV2UsersByUserIdResponse = PatchScimV2UsersByUserIdResponses[keyof PatchScimV2UsersByUserIdResponses];
+
+export type PutScimV2UsersByUserIdData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/scim/v2/Users/{user_id}';
+};
+
+export type PutScimV2UsersByUserIdResponses = {
+    /**
+     * Success
+     */
+    200: {
+        schemas: Array<string>;
+        id: string;
+        userName: string;
+        name: {
+            givenName: string;
+            familyName: string;
+        };
+        emails: Array<{
+            value: string;
+            primary: boolean;
+            type?: string;
+        }>;
+        roles: Array<{
+            value: string;
+            primary: boolean;
+        }>;
+        profileUrl: string | null;
+        active: boolean;
+        meta: {
+            resourceType: string;
+            created: string;
+            lastModified: string;
+        };
+    };
+    /**
+     * No Content
+     */
+    204: {
+        [key: string]: unknown;
+    };
+};
+
+export type PutScimV2UsersByUserIdResponse = PutScimV2UsersByUserIdResponses[keyof PutScimV2UsersByUserIdResponses];
+
+export type DeleteScimV2GroupsByWorkspaceTeamIdData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/scim/v2/Groups/{workspace_team_id}';
+};
+
+export type DeleteScimV2GroupsByWorkspaceTeamIdResponses = {
+    /**
+     * No Content
+     */
+    204: {
+        [key: string]: unknown;
+    };
+};
+
+export type DeleteScimV2GroupsByWorkspaceTeamIdResponse = DeleteScimV2GroupsByWorkspaceTeamIdResponses[keyof DeleteScimV2GroupsByWorkspaceTeamIdResponses];
+
+export type GetScimV2GroupsByWorkspaceTeamIdData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/scim/v2/Groups/{workspace_team_id}';
+};
+
+export type GetScimV2GroupsByWorkspaceTeamIdResponses = {
+    /**
+     * Success
+     */
+    200: {
+        schemas: Array<string>;
+        id: string;
+        displayName: string;
+        members: Array<{
+            value: string;
+            $ref: string;
+        }>;
+        meta: {
+            resourceType: string;
+            created: string;
+            lastModified: string;
+        };
+    };
+};
+
+export type GetScimV2GroupsByWorkspaceTeamIdResponse = GetScimV2GroupsByWorkspaceTeamIdResponses[keyof GetScimV2GroupsByWorkspaceTeamIdResponses];
+
+export type PatchScimV2GroupsByWorkspaceTeamIdData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/scim/v2/Groups/{workspace_team_id}';
+};
+
+export type PatchScimV2GroupsByWorkspaceTeamIdResponses = {
+    /**
+     * Success
+     */
+    200: {
+        schemas: Array<string>;
+        id: string;
+        displayName: string;
+        members: Array<{
+            value: string;
+            $ref: string;
+        }>;
+        meta: {
+            resourceType: string;
+            created: string;
+            lastModified: string;
+        };
+    };
+};
+
+export type PatchScimV2GroupsByWorkspaceTeamIdResponse = PatchScimV2GroupsByWorkspaceTeamIdResponses[keyof PatchScimV2GroupsByWorkspaceTeamIdResponses];
+
+export type PutScimV2GroupsByWorkspaceTeamIdData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/scim/v2/Groups/{workspace_team_id}';
+};
+
+export type PutScimV2GroupsByWorkspaceTeamIdResponses = {
+    /**
+     * Success
+     */
+    200: {
+        schemas: Array<string>;
+        id: string;
+        displayName: string;
+        members: Array<{
+            value: string;
+            $ref: string;
+        }>;
+        meta: {
+            resourceType: string;
+            created: string;
+            lastModified: string;
+        };
+    };
+};
+
+export type PutScimV2GroupsByWorkspaceTeamIdResponse = PutScimV2GroupsByWorkspaceTeamIdResponses[keyof PutScimV2GroupsByWorkspaceTeamIdResponses];
 
 export type GetV2WebhooksData = {
     body?: never;

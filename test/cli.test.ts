@@ -16,6 +16,13 @@ const streamToString = async (stream: PassThrough): Promise<string> => {
   return Buffer.concat(chunks).toString("utf8");
 };
 
+const getRequestUrl = (input: RequestInfo | URL): string => {
+  if (typeof input === "object" && input !== null && "url" in input) {
+    return String(input.url);
+  }
+  return String(input);
+};
+
 describe("runCli", () => {
   let stdout: PassThrough;
   let stderr: PassThrough;
@@ -38,7 +45,7 @@ describe("runCli", () => {
 
   it("executes generated commands and prints JSON", async () => {
     const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
-      const url = input instanceof Request ? input.url : String(input);
+      const url = getRequestUrl(input);
       expect(url).toBe("https://api.attio.com/v2/objects");
       return new Response(JSON.stringify({ data: [{ api_slug: "people" }] }), {
         headers: {
@@ -98,7 +105,7 @@ describe("runCli", () => {
   it("prompts for OAuth credentials and stores the token", async () => {
     const fetchMock = vi.fn(
       async (input: RequestInfo | URL, init?: RequestInit) => {
-        const url = input instanceof Request ? input.url : String(input);
+        const url = getRequestUrl(input);
         expect(url).toBe("https://app.attio.com/oauth/token");
 
         const body = new URLSearchParams(String(init?.body ?? ""));
@@ -163,7 +170,7 @@ describe("runCli", () => {
     const exitCode = await runCli(
       [
         "attributes",
-        "list-attributes",
+        "list",
         "--target",
         "objects",
         "--identifier",

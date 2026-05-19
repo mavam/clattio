@@ -242,14 +242,32 @@ export const normalizeSpec = (spec: OpenApiObject): OperationManifest[] => {
       continue;
     }
 
-    const used = new Set<string>();
-    for (const manifest of duplicates) {
-      const qualifier = deriveQualifier(
-        manifest.summary,
-        manifest.tag,
-        manifest.path,
-        manifest.method,
+    const qualifiers = new Map(
+      duplicates.map((manifest) => [
+        manifest,
+        deriveQualifier(
+          manifest.summary,
+          manifest.tag,
+          manifest.path,
+          manifest.method,
+        ),
+      ]),
+    );
+    const baseCommand = duplicates.find((manifest) => {
+      const qualifier = qualifiers.get(manifest);
+      return (
+        qualifier === manifest.commandGroup ||
+        qualifier === singularize(manifest.commandGroup)
       );
+    });
+    const used = new Set<string>(baseCommand ? [baseCommand.commandName] : []);
+
+    for (const manifest of duplicates) {
+      if (manifest === baseCommand) {
+        continue;
+      }
+
+      const qualifier = qualifiers.get(manifest)!;
       let candidate = `${manifest.commandName}-${qualifier}`;
       let counter = 2;
 

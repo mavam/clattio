@@ -8,7 +8,7 @@ export const manifest = [
     "sdkFunction": "postV2ByTargetByIdentifierAttributes",
     "tag": "Attributes",
     "commandGroup": "attributes",
-    "commandName": "create-attribute",
+    "commandName": "create",
     "method": "post",
     "path": "/v2/{target}/{identifier}/attributes",
     "summary": "Create an attribute",
@@ -48,7 +48,7 @@ export const manifest = [
     "method": "post",
     "path": "/v2/{target}/{identifier}/attributes/{attribute}/options",
     "summary": "Create a select option",
-    "description": "Adds a select option to a select attribute on an object or a list.\n\nRequired scopes: `object_configuration:read-write`.",
+    "description": "Adds a select option to a select attribute on an object or a list.\n\nWhen `target` is `objects`, the required scopes are `object_configuration:read-write`. When `target` is `lists`, the required scopes are `list_configuration:read-write`.",
     "parameters": [
       {
         "name": "target",
@@ -82,9 +82,7 @@ export const manifest = [
       "kind": "json",
       "required": true
     },
-    "scopes": [
-      "object_configuration:read-write"
-    ]
+    "scopes": []
   },
   {
     "id": "POST /v2/{target}/{identifier}/attributes/{attribute}/statuses",
@@ -95,7 +93,7 @@ export const manifest = [
     "method": "post",
     "path": "/v2/{target}/{identifier}/attributes/{attribute}/statuses",
     "summary": "Create a status",
-    "description": "Add a new status to a status attribute on either an object or a list.\n\nRequired scopes: `object_configuration:read-write`.",
+    "description": "Add a new status to a status attribute on either an object or a list.\n\nWhen `target` is `objects`, the required scopes are `object_configuration:read-write`. When `target` is `lists`, the required scopes are `list_configuration:read-write`.",
     "parameters": [
       {
         "name": "target",
@@ -103,7 +101,7 @@ export const manifest = [
         "optionName": "target",
         "location": "path",
         "required": true,
-        "description": "Whether the attribute is on an object or a list. Please note that company and person objects do not support status attributes at this time.",
+        "description": "Whether the attribute is on an object or a list.",
         "type": "string"
       },
       {
@@ -129,9 +127,7 @@ export const manifest = [
       "kind": "json",
       "required": true
     },
-    "scopes": [
-      "object_configuration:read-write"
-    ]
+    "scopes": []
   },
   {
     "id": "GET /v2/{target}/{identifier}/attributes/{attribute}",
@@ -142,7 +138,7 @@ export const manifest = [
     "method": "get",
     "path": "/v2/{target}/{identifier}/attributes/{attribute}",
     "summary": "Get an attribute",
-    "description": "Gets information about a single attribute on either an object or a list.\n\nRequired scopes: `object_configuration:read`.",
+    "description": "Gets information about a single attribute on either an object or a list.\n\nWhen `target` is `objects`, the required scopes are `object_configuration:read`. When `target` is `lists`, the required scopes are `list_configuration:read`.",
     "parameters": [
       {
         "name": "target",
@@ -176,20 +172,18 @@ export const manifest = [
       "kind": "none",
       "required": false
     },
-    "scopes": [
-      "object_configuration:read"
-    ]
+    "scopes": []
   },
   {
     "id": "GET /v2/{target}/{identifier}/attributes",
     "sdkFunction": "getV2ByTargetByIdentifierAttributes",
     "tag": "Attributes",
     "commandGroup": "attributes",
-    "commandName": "list-attributes",
+    "commandName": "list",
     "method": "get",
     "path": "/v2/{target}/{identifier}/attributes",
     "summary": "List attributes",
-    "description": "Lists all attributes defined on a specific object or list. Attributes are returned in the order that they are sorted by in the UI.\n\nRequired scopes: `object_configuration:read`.",
+    "description": "Lists all attributes defined on a specific object or list. Attributes are returned in the order that they are sorted by in the UI.\n\nWhen `target` is `objects`, the required scopes are `object_configuration:read`. When `target` is `lists`, the required scopes are `list_configuration:read`.",
     "parameters": [
       {
         "name": "target",
@@ -241,9 +235,7 @@ export const manifest = [
       "kind": "none",
       "required": false
     },
-    "scopes": [
-      "object_configuration:read"
-    ]
+    "scopes": []
   },
   {
     "id": "GET /v2/{target}/{identifier}/attributes/{attribute}/options",
@@ -254,7 +246,7 @@ export const manifest = [
     "method": "get",
     "path": "/v2/{target}/{identifier}/attributes/{attribute}/options",
     "summary": "List select options",
-    "description": "Lists all select options for a particular attribute on either an object or a list.\n\nRequired scopes: `object_configuration:read`.",
+    "description": "Lists all select options for a particular attribute on either an object or a list.\n\nWhen `target` is `objects`, the required scopes are `object_configuration:read`. When `target` is `lists`, the required scopes are `list_configuration:read`.",
     "parameters": [
       {
         "name": "target",
@@ -297,9 +289,7 @@ export const manifest = [
       "kind": "none",
       "required": false
     },
-    "scopes": [
-      "object_configuration:read"
-    ]
+    "scopes": []
   },
   {
     "id": "GET /v2/{target}/{identifier}/attributes/{attribute}/statuses",
@@ -310,7 +300,7 @@ export const manifest = [
     "method": "get",
     "path": "/v2/{target}/{identifier}/attributes/{attribute}/statuses",
     "summary": "List statuses",
-    "description": "Lists all statuses for a particular status attribute on either an object or a list.\n\nRequired scopes: `object_configuration:read`.",
+    "description": "Lists all statuses for a particular status attribute on either an object or a list.\n\nWhen `target` is `objects`, the required scopes are `object_configuration:read`. When `target` is `lists`, the required scopes are `list_configuration:read`.",
     "parameters": [
       {
         "name": "target",
@@ -318,7 +308,7 @@ export const manifest = [
         "optionName": "target",
         "location": "path",
         "required": true,
-        "description": "Whether the attribute is on an object or a list. Please note that the company and people objects do not support status attributes at this time.",
+        "description": "Whether the attribute is on an object or a list.",
         "type": "string"
       },
       {
@@ -353,20 +343,18 @@ export const manifest = [
       "kind": "none",
       "required": false
     },
-    "scopes": [
-      "object_configuration:read"
-    ]
+    "scopes": []
   },
   {
     "id": "PATCH /v2/{target}/{identifier}/attributes/{attribute}",
     "sdkFunction": "patchV2ByTargetByIdentifierAttributesByAttribute",
     "tag": "Attributes",
     "commandGroup": "attributes",
-    "commandName": "update-attribute",
+    "commandName": "update",
     "method": "patch",
     "path": "/v2/{target}/{identifier}/attributes/{attribute}",
     "summary": "Update an attribute",
-    "description": "Updates a single attribute on a given object or list.\n\nRequired scopes: `object_configuration:read-write`.",
+    "description": "Updates a single attribute on a given object or list.\n\nWhen `target` is `objects`, the required scopes are `object_configuration:read-write`. When `target` is `lists`, the required scopes are `list_configuration:read-write`.",
     "parameters": [
       {
         "name": "target",
@@ -400,9 +388,7 @@ export const manifest = [
       "kind": "json",
       "required": true
     },
-    "scopes": [
-      "object_configuration:read-write"
-    ]
+    "scopes": []
   },
   {
     "id": "PATCH /v2/{target}/{identifier}/attributes/{attribute}/options/{option}",
@@ -413,7 +399,7 @@ export const manifest = [
     "method": "patch",
     "path": "/v2/{target}/{identifier}/attributes/{attribute}/options/{option}",
     "summary": "Update a select option",
-    "description": "Updates a select option on an attribute on either an object or a list.\n\nRequired scopes: `object_configuration:read-write`.",
+    "description": "Updates a select option on an attribute on either an object or a list.\n\nWhen `target` is `objects`, the required scopes are `object_configuration:read-write`. When `target` is `lists`, the required scopes are `list_configuration:read-write`.",
     "parameters": [
       {
         "name": "target",
@@ -456,9 +442,7 @@ export const manifest = [
       "kind": "json",
       "required": true
     },
-    "scopes": [
-      "object_configuration:read-write"
-    ]
+    "scopes": []
   },
   {
     "id": "PATCH /v2/{target}/{identifier}/attributes/{attribute}/statuses/{status}",
@@ -469,7 +453,7 @@ export const manifest = [
     "method": "patch",
     "path": "/v2/{target}/{identifier}/attributes/{attribute}/statuses/{status}",
     "summary": "Update a status",
-    "description": "Update a status on an status attribute on either an object or a list.\n\nRequired scopes: `object_configuration:read-write`.",
+    "description": "Update a status on an status attribute on either an object or a list.\n\nWhen `target` is `objects`, the required scopes are `object_configuration:read-write`. When `target` is `lists`, the required scopes are `list_configuration:read-write`.",
     "parameters": [
       {
         "name": "target",
@@ -477,7 +461,7 @@ export const manifest = [
         "optionName": "target",
         "location": "path",
         "required": true,
-        "description": "Whether the attribute is on an object or a list. Please note that company and person objects do not support status attributes at this time.",
+        "description": "Whether the attribute is on an object or a list.",
         "type": "string"
       },
       {
@@ -512,9 +496,7 @@ export const manifest = [
       "kind": "json",
       "required": true
     },
-    "scopes": [
-      "object_configuration:read-write"
-    ]
+    "scopes": []
   },
   {
     "id": "POST /v2/meetings/{meeting_id}/call_recordings",
@@ -750,36 +732,6 @@ export const manifest = [
     ]
   },
   {
-    "id": "PUT /v2/lists/{list}/entries",
-    "sdkFunction": "putV2ListsByListEntries",
-    "tag": "Entries",
-    "commandGroup": "entries",
-    "commandName": "assert",
-    "method": "put",
-    "path": "/v2/lists/{list}/entries",
-    "summary": "Assert a list entry by parent",
-    "description": "Use this endpoint to create or update a list entry for a given parent record. If an entry with the specified parent record is found, that entry will be updated. If no such entry is found, a new entry will be created instead. If there are multiple entries with the same parent record, this endpoint with return the \"MULTIPLE_MATCH_RESULTS\" error. When writing to multi-select attributes, all values will be either created or deleted as necessary to match the list of values supplied in the request body.\n\nRequired scopes: `list_entry:read-write`, `list_configuration:read`.",
-    "parameters": [
-      {
-        "name": "list",
-        "optionKey": "list",
-        "optionName": "list",
-        "location": "path",
-        "required": true,
-        "description": "A UUID or slug of the list the list entry belongs to.",
-        "type": "string"
-      }
-    ],
-    "body": {
-      "kind": "json",
-      "required": true
-    },
-    "scopes": [
-      "list_entry:read-write",
-      "list_configuration:read"
-    ]
-  },
-  {
     "id": "POST /v2/lists/{list}/entries",
     "sdkFunction": "postV2ListsByListEntries",
     "tag": "Entries",
@@ -888,6 +840,36 @@ export const manifest = [
     ]
   },
   {
+    "id": "POST /v2/lists/{list}/entries/query",
+    "sdkFunction": "postV2ListsByListEntriesQuery",
+    "tag": "Entries",
+    "commandGroup": "entries",
+    "commandName": "list",
+    "method": "post",
+    "path": "/v2/lists/{list}/entries/query",
+    "summary": "List entries",
+    "description": "Lists entries in a given list, with the option to filter and sort results.\n\nRequired scopes: `list_entry:read`, `list_configuration:read`.",
+    "parameters": [
+      {
+        "name": "list",
+        "optionKey": "list",
+        "optionName": "list",
+        "location": "path",
+        "required": true,
+        "description": "A UUID or slug to identify the list to retrieve entries from.",
+        "type": "string"
+      }
+    ],
+    "body": {
+      "kind": "json",
+      "required": true
+    },
+    "scopes": [
+      "list_entry:read",
+      "list_configuration:read"
+    ]
+  },
+  {
     "id": "GET /v2/lists/{list}/entries/{entry_id}/attributes/{attribute}/values",
     "sdkFunction": "getV2ListsByListEntriesByEntryIdAttributesByAttributeValues",
     "tag": "Entries",
@@ -963,36 +945,6 @@ export const manifest = [
     ]
   },
   {
-    "id": "POST /v2/lists/{list}/entries/query",
-    "sdkFunction": "postV2ListsByListEntriesQuery",
-    "tag": "Entries",
-    "commandGroup": "entries",
-    "commandName": "list-entries",
-    "method": "post",
-    "path": "/v2/lists/{list}/entries/query",
-    "summary": "List entries",
-    "description": "Lists entries in a given list, with the option to filter and sort results.\n\nRequired scopes: `list_entry:read`, `list_configuration:read`.",
-    "parameters": [
-      {
-        "name": "list",
-        "optionKey": "list",
-        "optionName": "list",
-        "location": "path",
-        "required": true,
-        "description": "A UUID or slug to identify the list to retrieve entries from.",
-        "type": "string"
-      }
-    ],
-    "body": {
-      "kind": "json",
-      "required": true
-    },
-    "scopes": [
-      "list_entry:read",
-      "list_configuration:read"
-    ]
-  },
-  {
     "id": "PATCH /v2/lists/{list}/entries/{entry_id}",
     "sdkFunction": "patchV2ListsByListEntriesByEntryId",
     "tag": "Entries",
@@ -1058,6 +1010,36 @@ export const manifest = [
         "location": "path",
         "required": true,
         "description": "A UUID of the list entry to update.",
+        "type": "string"
+      }
+    ],
+    "body": {
+      "kind": "json",
+      "required": true
+    },
+    "scopes": [
+      "list_entry:read-write",
+      "list_configuration:read"
+    ]
+  },
+  {
+    "id": "PUT /v2/lists/{list}/entries",
+    "sdkFunction": "putV2ListsByListEntries",
+    "tag": "Entries",
+    "commandGroup": "entries",
+    "commandName": "upsert",
+    "method": "put",
+    "path": "/v2/lists/{list}/entries",
+    "summary": "Upsert a list entry by parent",
+    "description": "Use this endpoint to create or update a list entry for a given parent record. If an entry with the specified parent record is found, that entry will be updated. If no such entry is found, a new entry will be created instead. If there are multiple entries with the same parent record, this endpoint with return the \"MULTIPLE_MATCH_RESULTS\" error. When writing to multi-select attributes, all values will be either created or deleted as necessary to match the list of values supplied in the request body.\n\nRequired scopes: `list_entry:read-write`, `list_configuration:read`.",
+    "parameters": [
+      {
+        "name": "list",
+        "optionKey": "list",
+        "optionName": "list",
+        "location": "path",
+        "required": true,
+        "description": "A UUID or slug of the list the list entry belongs to.",
         "type": "string"
       }
     ],
@@ -1367,12 +1349,68 @@ export const manifest = [
     "sdkFunction": "getV2Lists",
     "tag": "Lists",
     "commandGroup": "lists",
-    "commandName": "list",
+    "commandName": "list-all-lists",
     "method": "get",
     "path": "/v2/lists",
     "summary": "List all lists",
     "description": "List all lists that your access token has access to. lists are returned in the order that they are sorted in the sidebar.\n\nRequired scopes: `list_configuration:read`.",
     "parameters": [],
+    "body": {
+      "kind": "none",
+      "required": false
+    },
+    "scopes": [
+      "list_configuration:read"
+    ]
+  },
+  {
+    "id": "GET /v2/lists/{list}/views",
+    "sdkFunction": "getV2ListsByListViews",
+    "tag": "Lists",
+    "commandGroup": "lists",
+    "commandName": "list-views-for-list",
+    "method": "get",
+    "path": "/v2/lists/{list}/views",
+    "summary": "List views for list",
+    "description": "Lists saved views for a list. Results are ordered by view ID (`id.view_id` ascending).\n\nRequired scopes: `list_configuration:read`.",
+    "parameters": [
+      {
+        "name": "list",
+        "optionKey": "list",
+        "optionName": "list",
+        "location": "path",
+        "required": true,
+        "description": "A UUID or slug to identify the list.",
+        "type": "string"
+      },
+      {
+        "name": "show_archived",
+        "optionKey": "showArchived",
+        "optionName": "show-archived",
+        "location": "query",
+        "required": false,
+        "description": "`true` to include archived views. See our [archiving guide](/docs/archiving-vs-deleting) for more information on archiving.",
+        "type": "boolean"
+      },
+      {
+        "name": "limit",
+        "optionKey": "limit",
+        "optionName": "limit",
+        "location": "query",
+        "required": false,
+        "description": "The maximum number of views to return. Must be between 1 and 1000. Defaults to 500.",
+        "type": "integer"
+      },
+      {
+        "name": "cursor",
+        "optionKey": "cursor",
+        "optionName": "cursor",
+        "location": "query",
+        "required": false,
+        "description": "A pagination cursor from a previous response's `pagination.next_cursor`. Omit for the first page.",
+        "type": "string"
+      }
+    ],
     "body": {
       "kind": "none",
       "required": false
@@ -1786,6 +1824,62 @@ export const manifest = [
     ]
   },
   {
+    "id": "GET /v2/objects/{object}/views",
+    "sdkFunction": "getV2ObjectsByObjectViews",
+    "tag": "Objects",
+    "commandGroup": "objects",
+    "commandName": "list-views-for-object",
+    "method": "get",
+    "path": "/v2/objects/{object}/views",
+    "summary": "List views for object",
+    "description": "Lists saved views for an object. Results are ordered by view ID (`id.view_id` ascending).\n\nRequired scopes: `object_configuration:read`.",
+    "parameters": [
+      {
+        "name": "object",
+        "optionKey": "object",
+        "optionName": "object",
+        "location": "path",
+        "required": true,
+        "description": "A UUID or slug to identify the object.",
+        "type": "string"
+      },
+      {
+        "name": "show_archived",
+        "optionKey": "showArchived",
+        "optionName": "show-archived",
+        "location": "query",
+        "required": false,
+        "description": "`true` to include archived views. See our [archiving guide](/docs/archiving-vs-deleting) for more information on archiving.",
+        "type": "boolean"
+      },
+      {
+        "name": "limit",
+        "optionKey": "limit",
+        "optionName": "limit",
+        "location": "query",
+        "required": false,
+        "description": "The maximum number of views to return. Must be between 1 and 1000. Defaults to 500.",
+        "type": "integer"
+      },
+      {
+        "name": "cursor",
+        "optionKey": "cursor",
+        "optionName": "cursor",
+        "location": "query",
+        "required": false,
+        "description": "A pagination cursor from a previous response's `pagination.next_cursor`. Omit for the first page.",
+        "type": "string"
+      }
+    ],
+    "body": {
+      "kind": "none",
+      "required": false
+    },
+    "scopes": [
+      "object_configuration:read"
+    ]
+  },
+  {
     "id": "PATCH /v2/objects/{object}",
     "sdkFunction": "patchV2ObjectsByObject",
     "tag": "Objects",
@@ -1815,45 +1909,6 @@ export const manifest = [
     ]
   },
   {
-    "id": "PUT /v2/objects/{object}/records",
-    "sdkFunction": "putV2ObjectsByObjectRecords",
-    "tag": "Records",
-    "commandGroup": "records",
-    "commandName": "assert",
-    "method": "put",
-    "path": "/v2/objects/{object}/records",
-    "summary": "Assert a record",
-    "description": "Use this endpoint to create or update people, companies and other records. A matching attribute is used to search for existing records. If a record is found with the same value for the matching attribute, that record will be updated. If no record with the same value for the matching attribute is found, a new record will be created instead. If you would like to avoid matching, please use the [Create record endpoint](/rest-api/endpoint-reference/records/create-a-record).\n\nIf the matching attribute is a multiselect attribute, new values will be added and existing values will not be deleted. For any other multiselect attribute, all values will be either created or deleted as necessary to match the list of supplied values.\n\nRequired scopes: `record_permission:read-write`, `object_configuration:read`.",
-    "parameters": [
-      {
-        "name": "object",
-        "optionKey": "object",
-        "optionName": "object",
-        "location": "path",
-        "required": true,
-        "description": "A UUID or slug to identify the object the record should belong to.",
-        "type": "string"
-      },
-      {
-        "name": "matching_attribute",
-        "optionKey": "matchingAttribute",
-        "optionName": "matching-attribute",
-        "location": "query",
-        "required": true,
-        "description": "The ID or slug of the attribute to use to check if a record already exists. The attribute must be unique.",
-        "type": "string"
-      }
-    ],
-    "body": {
-      "kind": "json",
-      "required": true
-    },
-    "scopes": [
-      "record_permission:read-write",
-      "object_configuration:read"
-    ]
-  },
-  {
     "id": "POST /v2/objects/{object}/records",
     "sdkFunction": "postV2ObjectsByObjectRecords",
     "tag": "Records",
@@ -1862,7 +1917,7 @@ export const manifest = [
     "method": "post",
     "path": "/v2/objects/{object}/records",
     "summary": "Create a record",
-    "description": "Creates a new person, company or other record. This endpoint will throw on conflicts of unique attributes. If you would prefer to update records on conflicts, please use the [Assert record endpoint](/rest-api/endpoint-reference/records/assert-a-record) instead.\n\nRequired scopes: `record_permission:read-write`, `object_configuration:read`.",
+    "description": "Creates a new person, company or other record. This endpoint will throw on conflicts of unique attributes. If you would prefer to update records on conflicts, please use the [Upsert record endpoint](/rest-api/endpoint-reference/records/upsert-a-record) instead.\n\nRequired scopes: `record_permission:read-write`, `object_configuration:read`.",
     "parameters": [
       {
         "name": "object",
@@ -1955,6 +2010,36 @@ export const manifest = [
     "body": {
       "kind": "none",
       "required": false
+    },
+    "scopes": [
+      "record_permission:read",
+      "object_configuration:read"
+    ]
+  },
+  {
+    "id": "POST /v2/objects/{object}/records/query",
+    "sdkFunction": "postV2ObjectsByObjectRecordsQuery",
+    "tag": "Records",
+    "commandGroup": "records",
+    "commandName": "list",
+    "method": "post",
+    "path": "/v2/objects/{object}/records/query",
+    "summary": "List records",
+    "description": "Lists people, company or other records, with the option to filter and sort results.\n\nRequired scopes: `record_permission:read`, `object_configuration:read`.",
+    "parameters": [
+      {
+        "name": "object",
+        "optionKey": "object",
+        "optionName": "object",
+        "location": "path",
+        "required": true,
+        "description": "A UUID or slug to identify the object to list records for.",
+        "type": "string"
+      }
+    ],
+    "body": {
+      "kind": "json",
+      "required": true
     },
     "scopes": [
       "record_permission:read",
@@ -2095,36 +2180,6 @@ export const manifest = [
     ]
   },
   {
-    "id": "POST /v2/objects/{object}/records/query",
-    "sdkFunction": "postV2ObjectsByObjectRecordsQuery",
-    "tag": "Records",
-    "commandGroup": "records",
-    "commandName": "list-records",
-    "method": "post",
-    "path": "/v2/objects/{object}/records/query",
-    "summary": "List records",
-    "description": "Lists people, company or other records, with the option to filter and sort results.\n\nRequired scopes: `record_permission:read`, `object_configuration:read`.",
-    "parameters": [
-      {
-        "name": "object",
-        "optionKey": "object",
-        "optionName": "object",
-        "location": "path",
-        "required": true,
-        "description": "A UUID or slug to identify the object to list records for.",
-        "type": "string"
-      }
-    ],
-    "body": {
-      "kind": "json",
-      "required": true
-    },
-    "scopes": [
-      "record_permission:read",
-      "object_configuration:read"
-    ]
-  },
-  {
     "id": "POST /v2/objects/records/search",
     "sdkFunction": "postV2ObjectsRecordsSearch",
     "tag": "Records",
@@ -2223,6 +2278,102 @@ export const manifest = [
     ]
   },
   {
+    "id": "PUT /v2/objects/{object}/records",
+    "sdkFunction": "putV2ObjectsByObjectRecords",
+    "tag": "Records",
+    "commandGroup": "records",
+    "commandName": "upsert",
+    "method": "put",
+    "path": "/v2/objects/{object}/records",
+    "summary": "Upsert a record",
+    "description": "Use this endpoint to create or update people, companies and other records. A matching attribute is used to search for existing records. If a record is found with the same value for the matching attribute, that record will be updated. If no record with the same value for the matching attribute is found, a new record will be created instead. If you would like to avoid matching, please use the [Create record endpoint](/rest-api/endpoint-reference/records/create-a-record).\n\nIf the matching attribute is a multiselect attribute, new values will be added and existing values will not be deleted. For any other multiselect attribute, all values will be either created or deleted as necessary to match the list of supplied values.\n\nRequired scopes: `record_permission:read-write`, `object_configuration:read`.",
+    "parameters": [
+      {
+        "name": "object",
+        "optionKey": "object",
+        "optionName": "object",
+        "location": "path",
+        "required": true,
+        "description": "A UUID or slug to identify the object the record should belong to.",
+        "type": "string"
+      },
+      {
+        "name": "matching_attribute",
+        "optionKey": "matchingAttribute",
+        "optionName": "matching-attribute",
+        "location": "query",
+        "required": true,
+        "description": "The ID or slug of the attribute to use to check if a record already exists. The attribute must be unique.",
+        "type": "string"
+      }
+    ],
+    "body": {
+      "kind": "json",
+      "required": true
+    },
+    "scopes": [
+      "record_permission:read-write",
+      "object_configuration:read"
+    ]
+  },
+  {
+    "id": "POST /scim/v2/Groups",
+    "sdkFunction": "postScimV2Groups",
+    "tag": "SCIM groups",
+    "commandGroup": "scim-groups",
+    "commandName": "create",
+    "method": "post",
+    "path": "/scim/v2/Groups",
+    "summary": "Create SCIM group",
+    "description": "Creates a SCIM group for the workspace.\n\nRequired scopes: `user_management:read-write`.",
+    "parameters": [],
+    "body": {
+      "kind": "none",
+      "required": false
+    },
+    "scopes": [
+      "user_management:read-write"
+    ]
+  },
+  {
+    "id": "DELETE /scim/v2/Groups/{workspace_team_id}",
+    "sdkFunction": "deleteScimV2GroupsByWorkspaceTeamId",
+    "tag": "SCIM groups",
+    "commandGroup": "scim-groups",
+    "commandName": "delete",
+    "method": "delete",
+    "path": "/scim/v2/Groups/{workspace_team_id}",
+    "summary": "Delete SCIM group",
+    "description": "Deletes a SCIM group from the workspace.\n\nRequired scopes: `user_management:read-write`.",
+    "parameters": [],
+    "body": {
+      "kind": "none",
+      "required": false
+    },
+    "scopes": [
+      "user_management:read-write"
+    ]
+  },
+  {
+    "id": "GET /scim/v2/Groups/{workspace_team_id}",
+    "sdkFunction": "getScimV2GroupsByWorkspaceTeamId",
+    "tag": "SCIM groups",
+    "commandGroup": "scim-groups",
+    "commandName": "get",
+    "method": "get",
+    "path": "/scim/v2/Groups/{workspace_team_id}",
+    "summary": "Get SCIM group",
+    "description": "Gets a SCIM group by ID.\n\nRequired scopes: `user_management:read`.",
+    "parameters": [],
+    "body": {
+      "kind": "none",
+      "required": false
+    },
+    "scopes": [
+      "user_management:read"
+    ]
+  },
+  {
     "id": "GET /scim/v2/Groups",
     "sdkFunction": "getScimV2Groups",
     "tag": "SCIM groups",
@@ -2231,14 +2382,52 @@ export const manifest = [
     "method": "get",
     "path": "/scim/v2/Groups",
     "summary": "List SCIM groups",
-    "description": "Lists SCIM groups for the workspace.\n\nRequired scopes: `scim_management:read`.",
+    "description": "Lists SCIM groups for the workspace.\n\nRequired scopes: `user_management:read`.",
     "parameters": [],
     "body": {
       "kind": "none",
       "required": false
     },
     "scopes": [
-      "scim_management:read"
+      "user_management:read"
+    ]
+  },
+  {
+    "id": "PATCH /scim/v2/Groups/{workspace_team_id}",
+    "sdkFunction": "patchScimV2GroupsByWorkspaceTeamId",
+    "tag": "SCIM groups",
+    "commandGroup": "scim-groups",
+    "commandName": "patch",
+    "method": "patch",
+    "path": "/scim/v2/Groups/{workspace_team_id}",
+    "summary": "Patch SCIM group",
+    "description": "Patches a SCIM group in the workspace.\n\nRequired scopes: `user_management:read-write`.",
+    "parameters": [],
+    "body": {
+      "kind": "none",
+      "required": false
+    },
+    "scopes": [
+      "user_management:read-write"
+    ]
+  },
+  {
+    "id": "PUT /scim/v2/Groups/{workspace_team_id}",
+    "sdkFunction": "putScimV2GroupsByWorkspaceTeamId",
+    "tag": "SCIM groups",
+    "commandGroup": "scim-groups",
+    "commandName": "update",
+    "method": "put",
+    "path": "/scim/v2/Groups/{workspace_team_id}",
+    "summary": "Update SCIM group",
+    "description": "Updates a SCIM group in the workspace.\n\nRequired scopes: `user_management:read-write`.",
+    "parameters": [],
+    "body": {
+      "kind": "none",
+      "required": false
+    },
+    "scopes": [
+      "user_management:read-write"
     ]
   },
   {
@@ -2250,14 +2439,14 @@ export const manifest = [
     "method": "get",
     "path": "/scim/v2/Schemas",
     "summary": "List SCIM schemas",
-    "description": "Lists the SCIM schemas supported by this service provider.\n\nRequired scopes: `scim_management:read`.",
+    "description": "Lists the SCIM schemas supported by this service provider.\n\nRequired scopes: `user_management:read`.",
     "parameters": [],
     "body": {
       "kind": "none",
       "required": false
     },
     "scopes": [
-      "scim_management:read"
+      "user_management:read"
     ]
   },
   {
@@ -2269,14 +2458,52 @@ export const manifest = [
     "method": "post",
     "path": "/scim/v2/Users",
     "summary": "Create SCIM user",
-    "description": "Creates a SCIM user in the workspace.\n\nRequired scopes: `scim_management:read-write`.",
+    "description": "Creates a SCIM user in the workspace.\n\nRequired scopes: `user_management:read-write`.",
     "parameters": [],
     "body": {
       "kind": "none",
       "required": false
     },
     "scopes": [
-      "scim_management:read-write"
+      "user_management:read-write"
+    ]
+  },
+  {
+    "id": "DELETE /scim/v2/Users/{user_id}",
+    "sdkFunction": "deleteScimV2UsersByUserId",
+    "tag": "SCIM users",
+    "commandGroup": "scim-users",
+    "commandName": "delete",
+    "method": "delete",
+    "path": "/scim/v2/Users/{user_id}",
+    "summary": "Delete SCIM user",
+    "description": "Deletes a SCIM user from the workspace.\n\nRequired scopes: `user_management:read-write`.",
+    "parameters": [],
+    "body": {
+      "kind": "none",
+      "required": false
+    },
+    "scopes": [
+      "user_management:read-write"
+    ]
+  },
+  {
+    "id": "GET /scim/v2/Users/{user_id}",
+    "sdkFunction": "getScimV2UsersByUserId",
+    "tag": "SCIM users",
+    "commandGroup": "scim-users",
+    "commandName": "get",
+    "method": "get",
+    "path": "/scim/v2/Users/{user_id}",
+    "summary": "Get SCIM user",
+    "description": "Gets a SCIM user by ID.\n\nRequired scopes: `user_management:read`.",
+    "parameters": [],
+    "body": {
+      "kind": "none",
+      "required": false
+    },
+    "scopes": [
+      "user_management:read"
     ]
   },
   {
@@ -2288,14 +2515,52 @@ export const manifest = [
     "method": "get",
     "path": "/scim/v2/Users",
     "summary": "List SCIM users",
-    "description": "Lists SCIM users for the workspace.\n\nRequired scopes: `scim_management:read`.",
+    "description": "Lists SCIM users for the workspace.\n\nRequired scopes: `user_management:read`.",
     "parameters": [],
     "body": {
       "kind": "none",
       "required": false
     },
     "scopes": [
-      "scim_management:read"
+      "user_management:read"
+    ]
+  },
+  {
+    "id": "PATCH /scim/v2/Users/{user_id}",
+    "sdkFunction": "patchScimV2UsersByUserId",
+    "tag": "SCIM users",
+    "commandGroup": "scim-users",
+    "commandName": "patch",
+    "method": "patch",
+    "path": "/scim/v2/Users/{user_id}",
+    "summary": "Patch SCIM user",
+    "description": "Patches a SCIM user in the workspace.\n\nRequired scopes: `user_management:read-write`.",
+    "parameters": [],
+    "body": {
+      "kind": "none",
+      "required": false
+    },
+    "scopes": [
+      "user_management:read-write"
+    ]
+  },
+  {
+    "id": "PUT /scim/v2/Users/{user_id}",
+    "sdkFunction": "putScimV2UsersByUserId",
+    "tag": "SCIM users",
+    "commandGroup": "scim-users",
+    "commandName": "update",
+    "method": "put",
+    "path": "/scim/v2/Users/{user_id}",
+    "summary": "Update SCIM user",
+    "description": "Updates a SCIM user in the workspace.\n\nRequired scopes: `user_management:read-write`.",
+    "parameters": [],
+    "body": {
+      "kind": "none",
+      "required": false
+    },
+    "scopes": [
+      "user_management:read-write"
     ]
   },
   {
@@ -2416,7 +2681,7 @@ export const manifest = [
         "optionName": "sort",
         "location": "query",
         "required": false,
-        "description": "Optionally sort the results. \"created_at:asc\" returns oldest results first, \"created_at:desc\" returns the newest results first. If unspecified, defaults to \"created_at:asc\" (oldest results first).",
+        "description": "Optionally sort the results. \"created_at:asc\" returns oldest results first, \"created_at:desc\" returns the newest results first. \"completed_at:asc\" and \"completed_at:desc\" sort by completion time. With \"completed_at:asc\", incomplete tasks (no completion date) appear first, followed by completed tasks oldest-first. With \"completed_at:desc\", completed tasks appear first (newest-first), followed by incomplete tasks. To exclude incomplete tasks, filter by is_completed. If unspecified, defaults to \"created_at:asc\" (oldest results first).",
         "type": "string"
       },
       {

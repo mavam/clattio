@@ -47,7 +47,7 @@ This is the fastest way to avoid hallucinated flags and malformed requests.
 2. Discover the schema before writing:
    - `attio objects list`
    - `attio objects get --object ...`
-   - `attio attributes list-attributes --target objects --identifier ...`
+   - `attio attributes list --target objects --identifier ...`
    - `attio lists list`
    - `attio lists get --list ...`
 3. Prefer exact IDs or slugs from live reads over guessing names.
@@ -56,13 +56,13 @@ This is the fastest way to avoid hallucinated flags and malformed requests.
 
 ## Command selection heuristics
 
-### Prefer `assert` for idempotent sync jobs
+### Prefer `upsert` for idempotent sync jobs
 
-Use `records assert` or `entries assert` when the user wants "create or update," "upsert," "sync," or "make sure this exists."
+Use `records upsert` or `entries upsert` when the user wants "create or update," "upsert," "sync," or "make sure this exists."
 
 Use `create` only when duplicates should fail loudly.
 
-See the Records and Entries sections in [`references/api-surface.md`](references/api-surface.md) for the full create/assert/update command set and body patterns.
+See the Records and Entries sections in [`references/api-surface.md`](references/api-surface.md) for the full create/upsert/update command set and body patterns.
 
 ### Choose the right multiselect update mode
 
@@ -72,8 +72,8 @@ See the Records and Entries sections in [`references/api-surface.md`](references
 ### Search vs list
 
 - Use `records search` for fuzzy lookup across names, domains, emails, phone numbers, and labels.
-- Use `records list-records` when you already know the object and want deterministic pagination.
-- Use `entries list-entries` when you care about list membership rather than global object records.
+- Use `records list` when you already know the object and want deterministic pagination.
+- Use `entries list` when you care about list membership rather than global object records.
 
 ## Practical execution tips
 
@@ -89,7 +89,7 @@ When a command fails, read the error message before retrying:
 
 - **401 Unauthorized**: the token is missing, expired, or lacks the required scope. Run `attio auth status` and, if needed, re-authenticate.
 - **404 Not Found**: the slug, ID, or resource path is wrong. Re-discover with `attio objects list`, `attio lists list`, or `attio <group> --help` to verify the correct identifiers.
-- **422 Unprocessable Entity**: the request body is malformed. Check the attribute types and value shapes against `attio attributes list-attributes` and `attio <group> <command> --help`. Common mistakes include missing the outer `data` wrapper and passing a bare value instead of an array.
+- **422 Unprocessable Entity**: the request body is malformed. Check the attribute types and value shapes against `attio attributes list` and `attio <group> <command> --help`. Common mistakes include missing the outer `data` wrapper and passing a bare value instead of an array.
 - **429 Too Many Requests**: back off and retry after a short delay.
 
 Do not retry blindly — diagnose first, fix the input, then retry. After a body validation error or unknown-option error, check `attio <group> <command> --help` and consult the per-command examples in [`references/api-surface.md`](references/api-surface.md) before attempting another variant.
@@ -135,21 +135,21 @@ After mutating data, follow up with one of:
 ### Set up a new custom object
 
 1. Create the object with `attio objects create`.
-2. Add fields with `attio attributes create-attribute`.
+2. Add fields with `attio attributes create`.
 3. If needed, add dropdown options or statuses.
 4. Start creating records in that object.
 
 ### Sync people or companies from another system
 
 1. Discover the object slug and unique matching attribute.
-2. Use `attio records assert --object ... --matching-attribute ...`.
+2. Use `attio records upsert --object ... --matching-attribute ...`.
 3. Read the record back or search for it.
 
 ### Manage a pipeline or campaign list
 
 1. Create or inspect the list.
 2. Add list-specific attributes if needed.
-3. Use `attio entries assert` or `attio entries create` to add records.
+3. Use `attio entries upsert` or `attio entries create` to add records.
 4. Update entry statuses or tags with the entry update commands.
 
 ### Find a record and check list membership
@@ -166,13 +166,13 @@ This is a common pattern when someone asks "add X to list Y" or "is X already in
    ```
    If search fails or the body shape is unclear, fall back to paginated listing with client-side filtering:
    ```sh
-   attio records list-records --object companies --body '{"limit": 500, "offset": 0}'
+   attio records list --object companies --body '{"limit": 500, "offset": 0}'
    ```
 3. Check which lists the record already belongs to:
    ```sh
    attio records list-record-entries --object companies --record-id <id>
    ```
-4. Compare the returned `list_id` values against the target list. If the record is not yet a member, add it with `entries create` or `entries assert`.
+4. Compare the returned `list_id` values against the target list. If the record is not yet a member, add it with `entries create` or `entries upsert`.
 
 ### Add collaboration context
 

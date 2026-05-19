@@ -53,9 +53,9 @@ Then narrow down with:
 
 ```sh
 attio objects get --object <object>
-attio attributes list-attributes --target objects --identifier <object>
+attio attributes list --target objects --identifier <object>
 attio lists get --list <list>
-attio attributes list-attributes --target lists --identifier <list>
+attio attributes list --target lists --identifier <list>
 ```
 
 ### Body patterns you can reuse
@@ -78,14 +78,14 @@ For records and entries, the values object is keyed by attribute slug or ID, and
 
 Several list and search commands are generated from POST endpoints and require a JSON body, even when you just want defaults. Omitting the body produces `This command requires a JSON body`. Pass `--body '{}'` when no filters are needed:
 
-- `attio records list-records --object <object> --body '{}'`
+- `attio records list --object <object> --body '{}'`
 - `attio records search --body-file <json>` (body is always required and has mandatory fields — see [Records](#records) for the exact shape)
-- `attio entries list-entries --list <list> --body '{}'`
+- `attio entries list --list <list> --body '{}'`
 
-### Create vs assert vs update
+### Create vs upsert vs update
 
 - Use **create** when duplicates should fail.
-- Use **assert** when you want idempotent create-or-update behavior.
+- Use **upsert** when you want idempotent create-or-update behavior.
 - Use **append multiselect** updates when adding values.
 - Use **overwrite multiselect** updates when replacing values.
 
@@ -103,6 +103,7 @@ Commands:
 
 - `attio objects list` — list all standard and custom objects.
 - `attio objects get --object <object>` — inspect one object by slug or ID.
+- `attio objects list-views-for-object --object <object>` — list saved views for an object.
 - `attio objects create --body-file <json>` — create a custom object.
 - `attio objects update --object <object> --body-file <json>` — rename or re-slug an object.
 
@@ -124,10 +125,10 @@ Typical use cases:
 
 Commands:
 
-- `attio attributes list-attributes --target <objects|lists> --identifier <id>` — inspect fields on an object or list.
+- `attio attributes list --target <objects|lists> --identifier <id>` — inspect fields on an object or list.
 - `attio attributes get --target <objects|lists> --identifier <id> --attribute <attr>` — inspect one field.
-- `attio attributes create-attribute --target <objects|lists> --identifier <id> --body-file <json>` — add a field.
-- `attio attributes update-attribute --target <objects|lists> --identifier <id> --attribute <attr> --body-file <json>` — change field metadata.
+- `attio attributes create --target <objects|lists> --identifier <id> --body-file <json>` — add a field.
+- `attio attributes update --target <objects|lists> --identifier <id> --attribute <attr> --body-file <json>` — change field metadata.
 - `attio attributes list-select-options --target ... --identifier ... --attribute ...` — inspect dropdown options.
 - `attio attributes create-select-option --target ... --identifier ... --attribute ... --body-file <json>` — add a dropdown choice.
 - `attio attributes update-select-option --target ... --identifier ... --attribute ... --option ... --body-file <json>` — rename or adjust a dropdown choice.
@@ -155,11 +156,11 @@ Typical use cases:
 
 Commands:
 
-- `attio records list-records --object <object>` — browse records in one object.
+- `attio records list --object <object>` — browse records in one object.
 - `attio records search --body-file <json>` — fuzzy search across one or more objects.
 - `attio records get --object <object> --record-id <id>` — fetch one record.
 - `attio records create --object <object> --body-file <json>` — create a new record and fail on uniqueness conflicts.
-- `attio records assert --object <object> --matching-attribute <attr> --body-file <json>` — idempotent create-or-update by a unique field.
+- `attio records upsert --object <object> --matching-attribute <attr> --body-file <json>` — idempotent create-or-update by a unique field.
 - `attio records update-append-multiselect-values --object <object> --record-id <id> --body-file <json>` — add multiselect values without deleting existing ones.
 - `attio records update-overwrite-multiselect-values --object <object> --record-id <id> --body-file <json>` — replace existing values with the payload.
 - `attio records list-record-attribute-values --object <object> --record-id <id> --attribute <attr>` — inspect one attribute's values on a record.
@@ -183,13 +184,13 @@ attio records search --body-file /tmp/search.json
 
 Use `"request_as": {"type": "workspace"}` to search across the whole workspace. To scope results to what one member can see, use `{"type": "workspace-member", "workspace_member_id": "<id>"}` instead.
 
-**Browse records with pagination** — `records list-records` requires a body even when you just want defaults:
+**Browse records with pagination** — `records list` requires a body even when you just want defaults:
 
 ```sh
 # First page
-attio records list-records --object companies --body '{"limit": 500, "offset": 0}'
+attio records list --object companies --body '{"limit": 500, "offset": 0}'
 # Next page
-attio records list-records --object companies --body '{"limit": 500, "offset": 500}'
+attio records list --object companies --body '{"limit": 500, "offset": 500}'
 ```
 
 Keep incrementing `offset` until the response returns fewer items than `limit`.
@@ -202,11 +203,11 @@ attio records list-record-entries --object companies --record-id <id>
 
 Practical advice:
 
-- Prefer `assert` for imports and syncs from other systems.
+- Prefer `upsert` for imports and syncs from other systems.
 - Prefer `create` for strict data entry when duplicates should raise an error.
 - `search` is convenient but eventually consistent; use direct gets or list endpoints when freshness matters.
 - Read back the record after a write if you need the canonical Attio value representation.
-- If `search` fails or its body shape is unclear, fall back to `list-records` with client-side filtering.
+- If `search` fails or its body shape is unclear, fall back to `records list` with client-side filtering.
 
 ## Lists
 
@@ -222,6 +223,7 @@ Commands:
 
 - `attio lists list` — list all lists.
 - `attio lists get --list <list>` — inspect one list.
+- `attio lists list-views-for-list --list <list>` — list saved views for a list.
 - `attio lists create --body-file <json>` — create a new list.
 - `attio lists update --list <list> --body-file <json>` — rename a list or change access.
 
@@ -244,10 +246,10 @@ Typical use cases:
 
 Commands:
 
-- `attio entries list-entries --list <list>` — browse entries in a list.
+- `attio entries list --list <list>` — browse entries in a list.
 - `attio entries get --list <list> --entry-id <id>` — inspect one list entry.
 - `attio entries create --list <list> --body-file <json>` — add a record to a list as a new entry.
-- `attio entries assert --list <list> --body-file <json>` — ensure one parent record has an entry and update it if it already exists.
+- `attio entries upsert --list <list> --body-file <json>` — ensure one parent record has an entry and update it if it already exists.
 - `attio entries update-append-multiselect-values --list <list> --entry-id <id> --body-file <json>` — add multiselect values on the entry.
 - `attio entries update-overwrite-multiselect-values --list <list> --entry-id <id> --body-file <json>` — replace multiselect values on the entry.
 - `attio entries list-attribute-values-for-list-entry --list <list> --entry-id <id> --attribute <attr>` — inspect one entry field.
@@ -255,15 +257,15 @@ Commands:
 
 Examples:
 
-**Browse entries in a list** — `list-entries` requires a body even for defaults:
+**Browse entries in a list** — `entries list` requires a body even for defaults:
 
 ```sh
-attio entries list-entries --list startup_fundraising --body '{}'
+attio entries list --list startup_fundraising --body '{}'
 ```
 
 Practical advice:
 
-- Use `assert` when the parent record should have at most one logical membership in that list.
+- Use `upsert` when the parent record should have at most one logical membership in that list.
 - Use `create` when duplicate entries are acceptable.
 - Entry attributes are distinct from parent record attributes; choose the endpoint based on where the data belongs.
 
