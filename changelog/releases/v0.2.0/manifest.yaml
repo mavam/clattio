@@ -1,0 +1,10 @@
+created: 2026-05-19
+title: Stable generated CLI commands
+intro: >-
+  This release keeps canonical Attio CLI commands stable as the generated API surface
+  grows, while adding saved-view commands and upsert terminology from the latest Attio
+  specification. It also improves the bundled agent skill with tested examples and
+  clearer recovery guidance for body-driven commands.
+source:
+  mode: sync-stable-queue
+  previous_stable: v0.1.0
