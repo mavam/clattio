@@ -9,7 +9,7 @@ Create, update, and inspect Attio objects, records, lists, entries, notes, tasks
 Install:
 
 ```sh
-bunx install -g clattio
+bun install -g clattio
 ```
 
 Grab an API token from your [Attio workspace settings](https://app.attio.com), then:
