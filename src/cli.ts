@@ -1,5 +1,6 @@
 import { Command, CommanderError } from "commander";
 
+import packageJson from "../package.json" with { type: "json" };
 import {
   DEFAULT_OAUTH_PORT,
   clearStoredToken,
@@ -36,7 +37,7 @@ interface ResolvedCliDependencies {
   stderr: NodeJS.WritableStream;
 }
 
-const VERSION = "0.2.0";
+const VERSION = packageJson.version;
 
 const parseFiniteNumber = (
   value: string,

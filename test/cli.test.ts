@@ -5,6 +5,7 @@ import { PassThrough } from "node:stream";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import packageJson from "../package.json" with { type: "json" };
 import { runCli } from "../src/cli";
 
 const streamToString = async (stream: PassThrough): Promise<string> => {
@@ -51,7 +52,7 @@ describe("runCli", () => {
     });
 
     expect(exitCode).toBe(0);
-    expect(await streamToString(stdout)).toBe("0.2.0\n");
+    expect(await streamToString(stdout)).toBe(`${packageJson.version}\n`);
     expect(await streamToString(stderr)).toBe("");
   });
 
