@@ -41,7 +41,7 @@ Keep them synchronized:
 
 - Resource vocabulary must match: object, attribute, record, list, entry,
   note, comment, thread, task, meeting, call recording, transcript, file,
-  webhook, workspace member, SCIM.
+  webhook, workspace member.
 - If a command group is added, renamed, or removed, update both files.
 - If command-selection guidance changes in `SKILL.md`, make sure the detailed
   reference still supports it.
