@@ -1,6 +1,6 @@
 ---
 name: clattio
-description: Guides the agent through Attio CLI (`attio`) workflows — querying, creating, updating, and managing CRM data from the terminal. Use this skill whenever the user wants to work with Attio through the `attio` CLI or the `clattio` npm package. Trigger for requests to inspect or modify Attio objects, attributes, records, lists, entries, notes, comments, tasks, meetings, call recordings, transcripts, files, webhooks, workspace members, or SCIM resources. Also use when the user mentions Attio contacts, companies, people, lists, pipelines, CRM data, syncing data into Attio, or automating Attio workflows from scripts. Even if the user doesn't mention Attio by name but refers to CRM records, contacts, pipelines, or deal stages in a context where Attio is the workspace CRM, use this skill.
+description: Guides the agent through Attio CLI (`attio`) workflows — querying, creating, updating, and managing CRM data from the terminal. Use this skill whenever the user wants to work with Attio through the `attio` CLI or the `clattio` npm package. Trigger for requests to inspect or modify Attio objects, attributes, records, lists, entries, notes, comments, tasks, meetings, call recordings, transcripts, files, webhooks, workspace members, or meta resources. Also use when the user mentions Attio contacts, companies, people, lists, pipelines, CRM data, syncing data into Attio, or automating Attio workflows from scripts. Even if the user doesn't mention Attio by name but refers to CRM records, contacts, pipelines, or deal stages in a context where Attio is the workspace CRM, use this skill.
 ---
 
 # clattio
@@ -19,7 +19,7 @@ Map the user's request to the right resource type before you run commands:
 - **Note / comment / thread / task**: collaboration objects around records or entries.
 - **Meeting / call recording / transcript**: synced activity and conversation data.
 - **File**: uploaded or linked file/folder content on records.
-- **Webhook / SCIM / workspace member / meta**: integration and administration surfaces, including limited SCIM provisioning.
+- **Webhook / workspace member / meta**: integration and administration surfaces.
 
 If a user says "contact," "company," "deal," or "CRM item," they usually mean a **record**.
 If they say "pipeline," "queue," "segment," or "saved collection," they often mean a **list** plus **entries**.
@@ -48,7 +48,7 @@ This is the fastest way to avoid hallucinated flags and malformed requests.
    - `attio objects list`
    - `attio objects get --object ...`
    - `attio attributes list --target objects --identifier ...`
-   - `attio lists list`
+   - `attio lists list-all-lists`
    - `attio lists get --list ...`
 3. Prefer exact IDs or slugs from live reads over guessing names.
 4. For writes, prefer `--body-file` with a temp JSON file instead of long inline JSON.
@@ -88,7 +88,7 @@ See the Records and Entries sections in [`references/api-surface.md`](references
 When a command fails, read the error message before retrying:
 
 - **401 Unauthorized**: the token is missing, expired, or lacks the required scope. Run `attio auth status` and, if needed, re-authenticate.
-- **404 Not Found**: the slug, ID, or resource path is wrong. Re-discover with `attio objects list`, `attio lists list`, or `attio <group> --help` to verify the correct identifiers.
+- **404 Not Found**: the slug, ID, or resource path is wrong. Re-discover with `attio objects list`, `attio lists list-all-lists`, or `attio <group> --help` to verify the correct identifiers.
 - **422 Unprocessable Entity**: the request body is malformed. Check the attribute types and value shapes against `attio attributes list` and `attio <group> <command> --help`. Common mistakes include missing the outer `data` wrapper and passing a bare value instead of an array.
 - **429 Too Many Requests**: back off and retry after a short delay.
 
@@ -158,7 +158,7 @@ This is a common pattern when someone asks "add X to list Y" or "is X already in
 
 1. Identify the list slug:
    ```sh
-   attio lists list
+   attio lists list-all-lists
    ```
 2. Search for the record by name:
    ```sh
@@ -180,4 +180,4 @@ This is a common pattern when someone asks "add X to list Y" or "is X already in
 - Use `comments` and `threads` for conversational discussion.
 - Use `tasks` for actionable follow-up with assignees and deadlines.
 
-For workflows involving meetings, call recordings, transcripts, files, webhooks, SCIM, or workspace members, read the corresponding section in [`references/api-surface.md`](references/api-surface.md) before acting — those resources have their own command sets and body shapes that are not covered above.
+For workflows involving meetings, call recordings, transcripts, files, webhooks, or workspace members, read the corresponding section in [`references/api-surface.md`](references/api-surface.md) before acting — those resources have their own command sets and body shapes that are not covered above.

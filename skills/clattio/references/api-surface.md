@@ -21,7 +21,6 @@ This reference maps the full `attio` CLI surface to practical use cases.
 - [Webhooks](#webhooks)
 - [Meta](#meta)
 - [Workspace members](#workspace-members)
-- [SCIM](#scim)
 
 ## Core mental model
 
@@ -35,7 +34,7 @@ Use these rules before choosing a command:
 - **Notes, comments, threads, and tasks** are collaboration layers.
 - **Meetings, call recordings, and transcripts** capture activity data.
 - **Files** attach folders and files to records.
-- **Webhooks, workspace members, SCIM, and meta** cover integrations and administration.
+- **Webhooks, workspace members, and meta** cover integrations and administration.
 
 ## Cross-cutting guidance
 
@@ -46,7 +45,7 @@ When the workspace structure is not already known, start with:
 ```sh
 attio auth status
 attio objects list
-attio lists list
+attio lists list-all-lists
 ```
 
 Then narrow down with:
@@ -221,7 +220,7 @@ Typical use cases:
 
 Commands:
 
-- `attio lists list` — list all lists.
+- `attio lists list-all-lists` — list all lists.
 - `attio lists get --list <list>` — inspect one list.
 - `attio lists list-views-for-list --list <list>` — list saved views for a list.
 - `attio lists create --body-file <json>` — create a new list.
@@ -413,7 +412,7 @@ Typical use cases:
 
 Commands:
 
-- `attio files list` — list files.
+- `attio files list --object <object> --record-id <id>` — list files for one record.
 - `attio files get --file-id <id>` — inspect one file.
 - `attio files download --file-id <id>` — download file contents.
 - `attio files upload --file <path> --object <object> --record-id <id> [--parent-folder-id <id>]` — upload a file to Attio storage.
@@ -422,6 +421,7 @@ Commands:
 
 Practical advice:
 
+- `list` is record-scoped. Pass `--object` and `--record-id`, and optionally filter by `--storage-provider` or `--parent-folder-id`.
 - `upload` expects multipart form data with a binary field named `file`, plus body fields such as `object` and `record_id`.
 - Maximum upload size is 50 MB.
 - When you are unsure how the CLI wants file uploads expressed, run `attio files upload --help` before acting.
@@ -483,27 +483,3 @@ Commands:
 Practical advice:
 
 - This is often the supporting step before creating or updating tasks.
-
-## SCIM
-
-Use the `scim-*` groups for identity-management and provisioning surfaces.
-
-Typical use cases:
-
-- Inspect SCIM users and groups.
-- Create a SCIM user when provisioning needs to start from the CLI surface.
-- Learn which SCIM schemas the service supports.
-- Troubleshoot enterprise identity sync.
-
-Commands:
-
-- `attio scim-users create` — create a SCIM user.
-- `attio scim-users list` — list SCIM users.
-- `attio scim-groups list` — list SCIM groups.
-- `attio scim-schemas list` — list supported SCIM schemas.
-
-Practical advice:
-
-- These commands are still primarily administrative. The only write currently exposed here is `scim-users create`.
-- Check `attio scim-users create --help` before acting. The generated surface currently exposes no body or flags for this endpoint, so treat it as spec-driven and verify the live behavior before relying on it in an automation flow.
-- If the user is not explicitly asking about provisioning or identity sync, they probably do not need the SCIM commands.
