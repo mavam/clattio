@@ -43,6 +43,18 @@ describe("runCli", () => {
     vi.restoreAllMocks();
   });
 
+  it("prints the CLI version without duplicating it to stderr", async () => {
+    const exitCode = await runCli(["--version"], {
+      env,
+      stdout,
+      stderr,
+    });
+
+    expect(exitCode).toBe(0);
+    expect(await streamToString(stdout)).toBe("0.2.0\n");
+    expect(await streamToString(stderr)).toBe("");
+  });
+
   it("executes generated commands and prints JSON", async () => {
     const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
       const url = getRequestUrl(input);

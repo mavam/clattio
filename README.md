@@ -17,7 +17,7 @@ Grab an API token from your [Attio workspace settings](https://app.attio.com), t
 ```sh
 attio auth token set
 attio objects list
-attio records search --object people --query "Jane"
+attio records search --body '{"query":"Jane","objects":["people"],"request_as":{"type":"workspace"}}'
 ```
 
 Scroll down for the OAuth setup.

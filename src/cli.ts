@@ -36,7 +36,7 @@ interface ResolvedCliDependencies {
   stderr: NodeJS.WritableStream;
 }
 
-const VERSION = "0.1.0";
+const VERSION = "0.2.0";
 
 const parseFiniteNumber = (
   value: string,
@@ -376,7 +376,10 @@ export const runCli = async (
     return 0;
   } catch (error) {
     if (error instanceof CommanderError) {
-      if (error.code !== "commander.helpDisplayed") {
+      if (
+        error.code !== "commander.helpDisplayed" &&
+        error.code !== "commander.version"
+      ) {
         deps.stderr.write(error.message ? `${error.message}\n` : "");
       }
       return error.exitCode;

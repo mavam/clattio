@@ -38,13 +38,13 @@
     "test": "bun run generate && bunx vitest run"
   },
   "dependencies": {
-    "commander": "14.0.3"
+    "commander": "15.0.0"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "0.94.0",
-    "@types/node": "24.3.0",
-    "tsup": "8.5.0",
-    "typescript": "5.9.2",
-    "vitest": "3.2.4"
+    "@hey-api/openapi-ts": "0.98.2",
+    "@types/node": "25.9.3",
+    "tsup": "8.5.1",
+    "typescript": "6.0.3",
+    "vitest": "4.1.9"
   }
 }

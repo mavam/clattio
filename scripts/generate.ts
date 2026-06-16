@@ -56,7 +56,7 @@ const main = async (): Promise<void> => {
     parser: {
       patch: {
         input: (openApi) => {
-          patchSpec(openApi as OpenApiObject);
+          patchSpec(openApi as unknown as OpenApiObject);
         },
       },
     },
