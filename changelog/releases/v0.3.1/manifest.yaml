@@ -1,0 +1,9 @@
+created: 2026-06-16
+title: Correct CLI version output
+intro: >-
+  This release fixes the CLI version output so attio --version reports the released
+  package version. The command now follows the package metadata updated during release,
+  preventing stale version output after installation.
+source:
+  mode: sync-stable-queue
+  previous_stable: v0.3.0
