@@ -1,0 +1,10 @@
+created: 2026-06-16
+title: Current Attio API surface
+intro: >-
+  This release refreshes the generated Attio CLI against the current Attio API surface
+  and dependency stack. It removes commands that are absent from the current specification
+  and updates the documented workflows for record-scoped files and body-driven record
+  search.
+source:
+  mode: sync-stable-queue
+  previous_stable: v0.2.0
